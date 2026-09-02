@@ -1,0 +1,6 @@
+# Proyecto del Reto 1 — se conserva en local como referencia, no se versiona aquí
+Reto_Hacienda_Modernizacion_SOLID/
+
+# Artefactos de compilación .NET (para cuando entre el código en src/)
+bin/
+obj/
