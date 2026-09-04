@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Arnés de caracterización del sistema REDISEÑADO (TO-BE).
+
+    Ejecuta exactamente los mismos casos que 03-src/Caracterizacion-Original y con
+    el mismo andamiaje de medición (Registro.cs es idéntico en los dos), de modo que
+    la comparación de las dos salidas mida el sistema y no el arnés.
+
+    Nótese lo que NO hay aquí: ninguna <Reference HintPath> al dominio. Gracias a
+    ADR-01, Bib_Hacienda llega de forma transitiva por ProjectReference. En el arnés
+    de la línea base hubo que repetir la referencia al DLL a mano (H-18).
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Caracterizacion.Rediseno</RootNamespace>
+    <AssemblyName>Caracterizacion.Rediseno</AssemblyName>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Ya no hace falta: el arnés del rediseño no necesita falsear nada del stack web (DE-2). -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\p_mvcHacienda\p_mvcHacienda.csproj" />
+  </ItemGroup>
+
+</Project>

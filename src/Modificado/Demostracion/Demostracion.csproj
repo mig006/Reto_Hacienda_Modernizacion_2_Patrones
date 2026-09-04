@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Programa principal de demostración (Fase 4 del enunciado).
+
+    Recorre los escenarios de uso más importantes del sistema contra el DOMINIO
+    REDISEÑADO, sin servidor web y sin tocar los datos del repositorio: trabaja
+    sobre un directorio temporal, así que se puede ejecutar tantas veces como haga
+    falta durante la sustentación.
+
+    Que este programa exista y funcione es, en sí mismo, evidencia de DIP: el
+    dominio y los servicios de aplicación no saben que existe ASP.NET. Antes era
+    imposible, porque Bib_Hacienda arrastraba once paquetes del stack web y
+    PersistenciaService leía el resultado de sus validaciones de HttpContext.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Demostracion</RootNamespace>
+    <AssemblyName>Demostracion</AssemblyName>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\p_mvcHacienda\p_mvcHacienda.csproj" />
+  </ItemGroup>
+
+</Project>

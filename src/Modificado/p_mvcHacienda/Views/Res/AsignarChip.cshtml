@@ -1,0 +1,83 @@
+@using Bib_Hacienda.Clases
+@{
+    ViewData["Title"] = "📍 Conectar chip";
+    var potreros = ViewBag.Potreros as List<Potrero> ?? new List<Potrero>();
+    var reses = ViewBag.Reses as List<(Potrero Potrero, Res Res)> ?? new List<(Potrero, Res)>();
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="aw-page-header mb-4">
+                <h1 class="display-6 fw-bold mb-1" style="color: var(--aw-text);">📍 Conectar chip de geolocalización</h1>
+                <p class="text-muted mb-0">Asocia un dispositivo a una res que ya está en un potrero</p>
+            </div>
+
+            @if (ViewBag.Mensaje != null)
+            {
+                <div class="alert alert-@ViewBag.TipoMensaje alert-dismissible fade show" role="alert">
+                    <strong>@ViewBag.Mensaje</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="aw-card">
+                <div class="aw-card-header">Datos del chip</div>
+                <div class="card-body p-4">
+                    <form asp-action="AsignarChip" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="potreroId" class="form-label fw-bold">Potrero</label>
+                                <select name="potreroId" id="potreroId" class="form-select form-select-lg" required>
+                                    <option value="">Seleccione…</option>
+                                    @foreach (var potrero in potreros)
+                                    {
+                                        <option value="@potrero.Identificacion">@potrero.Identificacion</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="nombreRes" class="form-label fw-bold">Res</label>
+                                <select name="nombreRes" id="nombreRes" class="form-select form-select-lg" required>
+                                    <option value="">Seleccione…</option>
+                                    @foreach (var item in reses)
+                                    {
+                                        <option value="@item.Res.Nombre">@item.Res.Nombre (@item.Potrero.Identificacion)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="identificador" class="form-label fw-bold">Identificador del chip</label>
+                            <input name="identificador" id="identificador" type="text" class="form-control form-control-lg"
+                                   placeholder="Ej: CHIP-0417" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="latitud" class="form-label fw-bold">Latitud</label>
+                                <input name="latitud" id="latitud" type="text" class="form-control form-control-lg"
+                                       placeholder="Ej: 6.244200" value="0" required />
+                                <small class="form-text text-muted">Entre -90 y 90. Use punto decimal.</small>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="longitud" class="form-label fw-bold">Longitud</label>
+                                <input name="longitud" id="longitud" type="text" class="form-control form-control-lg"
+                                       placeholder="Ej: -75.581200" value="0" required />
+                                <small class="form-text text-muted">Entre -180 y 180. Use punto decimal.</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a asp-action="Index" class="btn aw-btn aw-btn-secondary me-2">Cancelar</a>
+                            <button type="submit" class="btn aw-btn aw-btn-primary">Conectar chip</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

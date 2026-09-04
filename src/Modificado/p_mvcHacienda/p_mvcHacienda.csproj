@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Castle.Core lo sigue necesitando p_mvcHacienda/Aspectos/InterceptorAutenticacion.cs,
+      que ADR-10 conserva sin tocar y traslada a este proyecto. Es la capa donde una
+      dependencia de framework web sí corresponde.
+    -->
+    <PackageReference Include="Castle.Core" Version="5.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      ADR-01 · H-18: antes era <Reference Include="Bib_Hacienda"><HintPath>...bin\Debug\
+      Bib_Hacienda.dll</HintPath></Reference>, es decir, la web consumía una DLL ya
+      compilada. Un cambio en las reglas de negocio no llegaba a la aplicación hasta
+      que alguien recompilaba la biblioteca a mano.
+    -->
+    <ProjectReference Include="..\Bib_Hacienda\Bib_Hacienda\Bib_Hacienda.csproj" />
+  </ItemGroup>
+
+</Project>

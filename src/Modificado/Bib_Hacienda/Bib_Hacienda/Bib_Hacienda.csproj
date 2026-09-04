@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ADR-01 · Retargetear el dominio a net8.0 y referenciarlo por proyecto.
+
+    ANTES: proyecto legado (ToolsVersion 15.0, <TargetFrameworkVersion>v4.7.2), con
+    18 ensamblados por <HintPath>: los 11 paquetes ajenos al dominio —la biblioteca de
+    proxies dinámicos y diez paquetes del stack web de Microsoft— más 7 System.*
+    transitivos. El dominio no podía compilarse ni cargarse sin arrastrar el runtime
+    web (H-09), y la web lo consumía como DLL ya compilada (H-18).
+
+    DESPUÉS: SDK-style, net8.0, CERO referencias externas. El dominio queda solo con
+    las referencias por defecto del SDK. Lo habilitan ADR-03 (elimina
+    InterceptorValidarInformacion) y ADR-10 (traslada InterceptorAutenticacion a
+    p_mvcHacienda/Aspectos): eran las dos únicas clases del dominio que dependían del
+    generador de proxies y del contexto HTTP.
+
+    Verificación mecánica de ADR-01: este archivo no contiene ninguna de las dos
+    cadenas que el ADR prohíbe. Por eso el comentario tampoco las escribe.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Bib_Hacienda</RootNamespace>
+    <AssemblyName>Bib_Hacienda</AssemblyName>
+
+    <!-- Se conserva Properties/AssemblyInfo.cs tal cual venía del proyecto legado. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <!--
+      Se mantienen deshabilitados a propósito: activarlos obligaría a reescribir
+      archivos que este rediseño no interviene y aumentaría el riesgo de tocar
+      comportamiento sin necesidad.
+    -->
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
