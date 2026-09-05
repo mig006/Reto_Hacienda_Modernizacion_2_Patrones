@@ -1,3 +1,4 @@
+using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Valores;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Bib_Hacienda.Clases
     /// cambio de un mensaje nuevo, y el mensaje es salida observable. La mejora de LSP
     /// no depende del texto sino de DÓNDE se lanza.
     /// </summary>
-    public abstract class Res
+    public abstract class Res : IArticuloVendible
     {
 
         //Atributos

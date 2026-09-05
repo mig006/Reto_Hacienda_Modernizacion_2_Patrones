@@ -1,6 +1,7 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Reglas;
 using Bib_Hacienda.Servicios;
@@ -290,6 +291,56 @@ namespace Bib_Hacienda.Pruebas
             var potrero = new Potrero("P", l_tipos_potreros.ternero);
             potrero.anadir_res("Pinta", 6, 100, new PoliticaCapacidadPotrero(), Fabricas);
             Assert.Null(potrero.L_reses.Single().Chip);
+        }
+
+        // ══ Strategy (Actividad 2 · P-02) · IEfectoVenta ══════════════════════════
+
+        /// <summary>
+        /// Prueba de sustitución del registro de estrategias: ServicioVenta no sabe
+        /// si el artículo es una Res o un ProductoDerivado, y aun así cada uno recibe
+        /// el efecto que le corresponde. Es la prueba de que P-02 quedó resuelto y no
+        /// solo movido a otro condicional.
+        /// </summary>
+        [Fact]
+        public void VenderUnaResLaRetiraDelPotreroYVenderUnProductoNoTocaElInventario()
+        {
+            var hacienda = new Hacienda();
+            var gestorPotreros = new GestorPotreros(hacienda);
+            var efectos = new IEfectoVenta[] { new EfectoVentaRetiroInventario(), new EfectoVentaSinEfecto() };
+            var servicioVenta = new ServicioVenta(hacienda, gestorPotreros, efectos);
+
+            gestorPotreros.crear_potrero("P_Cebones", l_tipos_potreros.cebon);
+            var potrero = gestorPotreros.buscar_potrero("P_Cebones");
+            potrero.anadir_res("Rayo", 20, 200, new PoliticaCapacidadPotrero(), Fabricas);
+
+            Assert.Single(potrero.L_reses);
+
+            servicioVenta.vender_res("P_Cebones", "Rayo", 100);
+            Assert.Empty(potrero.L_reses);
+
+            var reseCebonesAntes = hacienda.L_potreros.Sum(p => p.L_reses.Count);
+            servicioVenta.vender_producto("P_Cebones", new ProductoDerivado(TipoProducto.Lacteo, 100), 50);
+            var reseCebonesDespues = hacienda.L_potreros.Sum(p => p.L_reses.Count);
+
+            Assert.Equal(reseCebonesAntes, reseCebonesDespues);
+            Assert.Equal(2, hacienda.L_ventas.Count);
+        }
+
+        /// <summary>
+        /// Cada IEfectoVenta declara el tipo que soporta y ninguno lanza al recibirlo:
+        /// misma verificación de postcondición que ADR-05 exige de IFabricaRes.
+        /// </summary>
+        [Fact]
+        public void CadaEfectoDeVentaSeAplicaSinLanzarSobreSuTipoSoportado()
+        {
+            var hacienda = new Hacienda();
+            var potrero = new Potrero("P", l_tipos_potreros.cebon);
+            var res = new Cebon("C", 200, 20);
+            potrero.L_reses.Add(res);
+            hacienda.L_potreros.Add(potrero);
+
+            new EfectoVentaRetiroInventario().Aplicar(hacienda, potrero, res);
+            new EfectoVentaSinEfecto().Aplicar(hacienda, potrero, new ProductoDerivado(TipoProducto.Carne, 10));
         }
 
         // ══ ADR-06 · La jerarquía Vacuna ya expone su estado ═════════════════════

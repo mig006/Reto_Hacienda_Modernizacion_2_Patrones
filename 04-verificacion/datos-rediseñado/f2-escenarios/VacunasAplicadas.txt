@@ -1,0 +1,4 @@
+Potrero_Terneros|Pinta|BacA|LB-A|2030-12-31|2030-01-15|Bacteriana|2
+Potrero_Terneros|Pinta|BacB|LB-B|2030-12-31|2030-01-15|Bacteriana|3
+Potrero_Terneros|Pinta|BacC|LB-C|2030-12-31|2030-01-15|Bacteriana|4
+Potrero_Terneros|Pinta|VivA|LV-A|2030-12-31|2030-01-15|Viva|0

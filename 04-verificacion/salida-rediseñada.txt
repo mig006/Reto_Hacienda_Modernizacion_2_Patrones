@@ -1,0 +1,376 @@
+CARACTERIZACIÓN · casos heredados del Reto 1
+Categorías observables verificadas: 1 texto · 2 tipo de alerta · 3 navegación · 4 archivos · 5 listados · 6 consola
+
+################################################################
+## FIXTURE F1 · carga de arranque sobre los datos históricos
+################################################################
+
+=== Arranque · Program.cs:33-74 ===
+[consola] Datos cargados: 4 potreros, 2 ventas, 18 vacunas
+
+=== Inventario tras la carga ===
+[potreros] 4
+[reses] 226
+[vacunas-catalogo] 18
+[vacunas-aplicadas] 2
+[ventas] 2
+
+=== Round-trip de guardado sobre los datos históricos ===
+[GuardarPotreros] Datos válidos. Guardado exitoso en BD
+[GuardarReses] Datos válidos. Guardado exitoso en BD
+[GuardarVacunas] Datos válidos. Guardado exitoso en BD
+[GuardarVacunasAplicadas] Datos válidos. Guardado exitoso en BD
+[GuardarVentas] Datos válidos. Guardado exitoso en BD
+[GuardarUsuarios] Guardado exitosamente
+
+################################################################
+## FIXTURE F2 · los quince casos de caracterización
+################################################################
+
+################################################################
+## CASO 01 · Crear potrero
+################################################################
+
+=== crear potrero 'Potrero_Terneros' (ternero) ===
+[mensaje] El potrero Potrero_Terneros se a añadido a la hacienda. . Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear potrero 'Potrero_Cebones' (cebon) ===
+[mensaje] El potrero Potrero_Cebones se a añadido a la hacienda. . Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear potrero 'Potrero_Novillos' (novillo) ===
+[mensaje] El potrero Potrero_Novillos se a añadido a la hacienda. . Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear potrero 'Corral_Lleno' (ternero) ===
+[mensaje] El potrero Corral_Lleno se a añadido a la hacienda. . Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 02 · Añadir res del tipo correcto
+################################################################
+
+=== añadir res 'Pinta' a 'Potrero_Terneros' (edad 6, peso 100) ===
+[mensaje] La res Pinta ha sido añadida al potrero Potrero_Terneros con exito.
+[Evento] La res 'Pinta' tiene un peso 100, está en desnutrición.. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== añadir res 'Rayo' a 'Potrero_Cebones' (edad 20, peso 200) ===
+[mensaje] La res Rayo ha sido añadida al potrero Potrero_Cebones con exito.
+[Evento] La res 'Rayo' tiene un peso 200, está en desnutrición.. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== añadir res 'Trueno' a 'Potrero_Novillos' (edad 60, peso 300) ===
+[mensaje] La res Trueno ha sido añadida al potrero Potrero_Novillos con exito.
+[Evento] La res 'Trueno' tiene un peso 300, está en desnutrición.. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 03 · Alimentar res por debajo del peso mínimo · los tres tipos
+################################################################
+
+=== alimentar 'Pinta' en 'Potrero_Terneros' con 1 ===
+[mensaje] La res 'Pinta' ha sido alimentada, ahora pesa 101 kg.
+[Evento] La res 'Pinta' tiene un peso 101, está en desnutrición.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== alimentar 'Rayo' en 'Potrero_Cebones' con 1 ===
+[mensaje] La res 'Rayo' ha sido alimentada, ahora pesa 201 kg.
+[Evento] La res 'Rayo' tiene un peso 201, está en desnutrición.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== alimentar 'Trueno' en 'Potrero_Novillos' con 1 ===
+[mensaje] La res 'Trueno' ha sido alimentada, ahora pesa 301 kg.
+[Evento] La res 'Trueno' tiene un peso 301, está en desnutrición.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 04 · Alimentar res hasta el peso de venta · los tres tipos
+################################################################
+
+=== alimentar 'Pinta' en 'Potrero_Terneros' con 149 ===
+[mensaje] La res 'Pinta' ha sido alimentada, ahora pesa 250 kg.
+[Evento] La res 'Pinta' tiene un peso 250, apta para venta.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== alimentar 'Rayo' en 'Potrero_Cebones' con 219 ===
+[mensaje] La res 'Rayo' ha sido alimentada, ahora pesa 420 kg.
+[Evento] La res 'Rayo' tiene un peso 420, apta para venta.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== alimentar 'Trueno' en 'Potrero_Novillos' con 249 ===
+[mensaje] La res 'Trueno' ha sido alimentada, ahora pesa 550 kg.
+[Evento] La res 'Trueno' tiene un peso 550, apta para venta.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 05 · Crear vacuna bacteriana y viva
+################################################################
+
+=== crear vacuna bacteriana 'Bravox' lote 'LoteB1' ===
+[mensaje] Vacuna bacteriana 'Bravox' del lote 'LoteB1' agregada al inventario con éxito. Período de aplicación: 3 semanas.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear vacuna viva 'AtuVac' lote 'LoteV1' (Atenuacion20) ===
+[mensaje] Vacuna viva 'AtuVac' del lote 'LoteV1' agregada al inventario con éxito. Grado de atenuación: 20.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 06 · Aplicar vacunas hasta completar el esquema de un ternero
+################################################################
+
+=== crear vacuna bacteriana 'BacA' lote 'LB-A' ===
+[mensaje] Vacuna bacteriana 'BacA' del lote 'LB-A' agregada al inventario con éxito. Período de aplicación: 2 semanas.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear vacuna bacteriana 'BacB' lote 'LB-B' ===
+[mensaje] Vacuna bacteriana 'BacB' del lote 'LB-B' agregada al inventario con éxito. Período de aplicación: 3 semanas.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear vacuna bacteriana 'BacC' lote 'LB-C' ===
+[mensaje] Vacuna bacteriana 'BacC' del lote 'LB-C' agregada al inventario con éxito. Período de aplicación: 4 semanas.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== crear vacuna viva 'VivA' lote 'LV-A' (Atenuacion10) ===
+[mensaje] Vacuna viva 'VivA' del lote 'LV-A' agregada al inventario con éxito. Grado de atenuación: 10.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== aplicar lote 'LB-A' a 'Pinta' en 'Potrero_Terneros' ===
+[mensaje] Vacuna aplicada correctamente a la res Pinta. [Evento] La res 'Pinta' aún no ha completado su esquema de vacunación. Bacterianas: 1, Vivas: 0. Datos válidos. Guardado exitoso en BD.
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== aplicar lote 'LB-B' a 'Pinta' en 'Potrero_Terneros' ===
+[mensaje] Vacuna aplicada correctamente a la res Pinta. [Evento] La res 'Pinta' aún no ha completado su esquema de vacunación. Bacterianas: 2, Vivas: 0. Datos válidos. Guardado exitoso en BD.
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== aplicar lote 'LB-C' a 'Pinta' en 'Potrero_Terneros' ===
+[mensaje] Vacuna aplicada correctamente a la res Pinta. [Evento] La res 'Pinta' aún no ha completado su esquema de vacunación. Bacterianas: 3, Vivas: 0. Datos válidos. Guardado exitoso en BD.
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== aplicar lote 'LV-A' a 'Pinta' en 'Potrero_Terneros' ===
+[mensaje] Vacuna aplicada correctamente a la res Pinta. [Evento] La res 'Pinta' ha completado su esquema de vacunación.. Datos válidos. Guardado exitoso en BD.
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 07 · Vender res
+################################################################
+
+=== vender 'Trueno' de 'Potrero_Novillos' por 2500000 ===
+[mensaje] Venta de la res Trueno realizada con exito
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== VentaService.ObtenerTodasLasVentas ===
+Potrero_Novillos|<HOY>|Trueno|550|60|Novillo|2500000
+
+################################################################
+## CASO 08 · Listar reses · estadísticas y tabla
+################################################################
+
+=== ResService.ObtenerEstadisticas ===
+[TotalReses] 2
+[Terneros] 1
+[Cebones] 1
+[Novillos] 0
+[PesoPromedio] 335
+
+=== ResService.ObtenerTodasLasReses · orden y contenido de la tabla ===
+Potrero_Terneros|Pinta|Ternero|250|6|4
+Potrero_Cebones|Rayo|Cebon|420|20|0
+[total-filas] 2
+
+################################################################
+## CASO 09 · Añadir res con edad fuera del rango del potrero
+################################################################
+
+=== añadir res 'Anciana' a 'Potrero_Terneros' (edad 30, peso 200) ===
+[mensaje] Error al agregar la res: Error inesperado en el método anadir_res_potrero: Error inesperado en el metodo anadir_res: La res no puede ser añadida al potrero Potrero_Terneros porque su edad no corresponde al tipo de potrero
+[tipo] danger
+[navegacion] View()
+
+################################################################
+## CASO 10 · Añadir res a potrero lleno (150 reses)
+################################################################
+
+=== añadir res 'Lleno_001' a 'Corral_Lleno' (edad 6, peso 200) ===
+[mensaje] La res Lleno_001 ha sido añadida al potrero Corral_Lleno con exito.. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== añadir res 'Lleno_075' a 'Corral_Lleno' (edad 6, peso 200) ===
+[mensaje] La res Lleno_075 ha sido añadida al potrero Corral_Lleno con exito.
+[Evento] El potrero 'Corral_Lleno' ha alcanzado la mitad de su capacidad máxima de reses.. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== añadir res 'Lleno_150' a 'Corral_Lleno' (edad 6, peso 200) ===
+[mensaje] La res Lleno_150 ha sido añadida al potrero Corral_Lleno con exito.
+[Evento] El potrero 'Corral_Lleno' ha alcanzado su capacidad máxima de reses (150). No se pueden agregar más reses.. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== añadir res 'Sobrante' a 'Corral_Lleno' (edad 6, peso 200) ===
+[mensaje] Error al agregar la res: Error inesperado en el método anadir_res_potrero: Error inesperado en el metodo anadir_res: La res no puede ser añadida al potrero Corral_Lleno porque este está lleno
+[tipo] danger
+[navegacion] View()
+
+################################################################
+## CASO 11 · Añadir res a un potrero inexistente · cadena de cuatro wrappers
+################################################################
+
+=== añadir res 'Fantasma' a 'NoExiste' (edad 6, peso 200) ===
+[mensaje] Error al agregar la res: Error inesperado en el método buscar_potrero: No se encontró ningún potrero con el nombre o coincidencia 'NoExiste'.
+[tipo] danger
+[navegacion] View()
+
+################################################################
+## CASO 12 · Añadir res con nombre duplicado · pérdida del mensaje original
+################################################################
+
+=== añadir res 'Pinta' a 'Potrero_Terneros' (edad 6, peso 100) ===
+[mensaje] Validación fallida: La res no cumple los requisitos
+[tipo] danger
+[navegacion] View()
+
+################################################################
+## CASO 13 · Vacuna ya aplicada y límite por tipo de res
+################################################################
+
+=== crear vacuna bacteriana 'BacA' lote 'LB-D' ===
+[mensaje] Vacuna bacteriana 'BacA' del lote 'LB-D' agregada al inventario con éxito. Período de aplicación: 2 semanas.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== aplicar lote 'LB-D' a 'Pinta' en 'Potrero_Terneros' ===
+[mensaje] Error inesperado en el metodo aplicar_vacuna: La vacuna 'BacA' ya fue aplicada a la res 'Pinta'.
+[sonda] x
+[tipo] danger
+[navegacion] View()
+
+=== crear vacuna bacteriana 'BacE' lote 'LB-E' ===
+[mensaje] Vacuna bacteriana 'BacE' del lote 'LB-E' agregada al inventario con éxito. Período de aplicación: 2 semanas.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== aplicar lote 'LB-E' a 'Pinta' en 'Potrero_Terneros' ===
+[mensaje] Error inesperado en el metodo aplicar_vacuna: No se puede aplicar más vacunas bacterianas a la res 'Pinta'. Ya tiene las 3 permitidas.
+[sonda] x
+[tipo] danger
+[navegacion] View()
+
+################################################################
+## CASO 14 · Deuda congelada D-2, D-3 y D-5
+################################################################
+
+=== D-2 · crear usuario válido 'santi' ===
+[mensaje] Usuario 'santi' creado exitosamente
+[sonda] ✅
+[tipo] danger
+[navegacion] View()
+
+=== D-3 · crear vacuna con lote duplicado 'LoteB1' ===
+[mensaje] Error inesperado en el método crear_vacuna (bacteriana): Ya existe una vacuna con el lote 'LoteB1' en el inventario
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== D-5 · crear lote bacteriano de 3 (mensaje con {nombre} literal) ===
+[mensaje] Lote de vacunas bacterianas creado con éxito:
+- Nombre: {nombre}
+- Cantidad creada: 3 de 3
+- Lotes: LB-LOTE-001 a LB-LOTE-003
+- Período de aplicación: 2 semanas
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== D-5 · contraste: lote vivo de 3 (mensaje correcto) ===
+[mensaje] Lote de vacunas vivas creado con éxito:
+- Nombre: LoteViv
+- Cantidad creada: 3 de 3
+- Lotes: LV-LOTE-001 a LV-LOTE-003
+- Grado de atenuación: 30
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+################################################################
+## CASO 15 · Deuda congelada D-1 · la atenuación de las vivas se pierde al reiniciar
+################################################################
+
+=== crear vacuna viva 'PerdidaD1' lote 'LV-D1' con Atenuacion30 ===
+[mensaje] Vacuna viva 'PerdidaD1' del lote 'LV-D1' agregada al inventario con éxito. Grado de atenuación: 30.. Datos válidos. Guardado exitoso en BD
+[sonda] x
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== línea escrita en Vacunas.txt para el lote 'LV-D1' ===
+[linea] PerdidaD1|LV-D1|2030-12-31|2030-01-15|Viva|0
+
+=== reinicio · se recarga todo desde disco ===
+[consola] Datos cargados: 4 potreros, 1 ventas, 11 vacunas
+
+=== grado de atenuación recuperado del lote 'LV-D1' ===
+[tipo] Viva
+[atenuacion] Atenuacion10
+[esperado-por-el-usuario] Atenuacion30
+[veredicto-D-1] el grado se pierde en cada reinicio; se conserva a propósito
+
+=== Inventario tras el reinicio ===
+[potreros] 4
+[reses] 152
+[vacunas-catalogo] 11
+[vacunas-aplicadas] 4
+[ventas] 1
+
+################################################################
+## CASO 15-BIS · Deuda congelada D-4 · el rechazo por edad en Novillo nombra al ternero
+################################################################
+
+=== Ventas.txt con una fila incoherente (Novillo de 10 meses) ===
+[fila] Potrero_Novillos|2030-05-05|Incoherente|500|10|Novillo|1000000
+
+=== reinicio · Program.cs:33-74 sobre el archivo incoherente ===
+[consola] Error al cargar datos: Error al cargar ventas: El ternero excedió la edad maxima
+[veredicto-D-4] el literal nombra al ternero dentro de Novillo; se conserva a propósito
+
+=== Inventario tras el arranque fallido ===
+[potreros] 4
+[reses] 152
+[vacunas-catalogo] 0
+[vacunas-aplicadas] 4
+[ventas] 0

@@ -1,0 +1,68 @@
+SC-2 (Reto 1) · casos 16 a 18 · chips de geolocalización
+Verifican que la funcionalidad de SC-2 sigue intacta tras los patrones del Reto 2.
+
+################################################################
+## FIXTURE F3 · SC-2 · casos 16 a 18
+################################################################
+Ejecutados SOLO contra el sistema rediseñado: el original no tiene chips.
+
+################################################################
+## CASO 16 · Cargar el Reses.txt histórico de cinco columnas
+################################################################
+[consola] Datos cargados: 4 potreros, 2 ventas, 18 vacunas
+
+=== las reses históricas cargan íntegras y sin chip ===
+[reses-cargadas] 226
+[reses-con-chip] 0
+[reses-sin-chip] 226
+[veredicto-ADR-12] ninguna línea histórica se descartó ni cambió de significado
+
+=== ResService.ObtenerEstadisticas ===
+[TotalReses] 226
+[Terneros] 0
+[Cebones] 76
+[Novillos] 150
+[PesoPromedio] 546.2787610619469
+
+################################################################
+## CASO 17 · Guardar sin ninguna res con chip
+################################################################
+
+=== comparación byte a byte contra el archivo del sistema original ===
+[resultado] (no se encontró el archivo del sistema original; ejecute antes su arnés)
+
+################################################################
+## CASO 18 · Conectar chip, registrar dos posiciones, reiniciar y consultar
+################################################################
+
+=== conectar CHIP-0417 a 'Rayo' en 'Potrero_Cebones' ===
+[mensaje] El chip CHIP-0417 fue conectado a la res Rayo. Datos válidos. Guardado exitoso en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== primera lectura de posición ===
+[mensaje] Posición del chip CHIP-0417 actualizada para la res Rayo.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== segunda lectura de posición ===
+[mensaje] Posición del chip CHIP-0417 actualizada para la res Rayo.
+[tipo] success
+[navegacion] RedirectToAction(Index)
+
+=== las dos formas de línea conviven en Reses.txt ===
+[linea-con-chip] Potrero_Cebones|Rayo|287|14|Cebon|CHIP-0417|6.249900|-75.589000|<HOY>
+[linea-sin-chip] Potrero_Cebones|Luna|301|27|Cebon
+[reparto-de-columnas] 225 líneas de 5, 1 líneas de 9
+
+=== reinicio · se recarga todo desde disco ===
+[consola] Datos cargados: 4 potreros, 2 ventas, 18 vacunas
+
+=== estado del chip tras el reinicio ===
+[res] Rayo
+[identificador] CHIP-0417
+[latitud] 6.249900
+[longitud] -75.589000
+[esperado] CHIP-0417 con la SEGUNDA lectura: 6.249900, -75.589000
+[reses-sin-chip-que-siguen-cargando] 225
+[veredicto-ADR-11] el identificador se conserva; el objeto de valor se reemplazó, no se mutó

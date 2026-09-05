@@ -1,6 +1,7 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
 using Bib_Hacienda.Valores;
@@ -112,6 +113,16 @@ namespace p_mvcHacienda.Composicion
             // repetidas en VacunaService, VacunaController y MapeadorVacuna.
             builder.Services.AddSingleton<IFabricaVacuna, FabricaVacunaBacteriana>();
             builder.Services.AddSingleton<IFabricaVacuna, FabricaVacunaViva>();
+
+            // ── Estrategias de venta · Strategy (ADR-14, P-02, Actividad 2) ─────────
+            //
+            // Qué le pasa al inventario al vender ya no es un `if` dentro de
+            // ServicioVenta: es este registro, resuelto por el tipo del artículo
+            // vendido, igual que las dos líneas de arriba resuelven IFabricaVacuna. Un
+            // artículo con un efecto de inventario nuevo es una clase más y una línea
+            // aquí; ServicioVenta no se vuelve a tocar.
+            builder.Services.AddSingleton<IEfectoVenta, EfectoVentaRetiroInventario>();
+            builder.Services.AddSingleton<IEfectoVenta, EfectoVentaSinEfecto>();
 
             builder.Services.AddSingleton<PoliticaCapacidadPotrero>();
 

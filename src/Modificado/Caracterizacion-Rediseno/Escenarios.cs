@@ -1,6 +1,7 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
 using p_mvcHacienda.Infraestructura;
@@ -63,6 +64,7 @@ namespace Caracterizacion.Rediseno
             // incorporar un cuarto tipo de ganado al dominio.
             var fabricas = new IFabricaRes[] { new FabricaTernero(), new FabricaCebon(), new FabricaNovillo() };
             var fabricasVacuna = new IFabricaVacuna[] { new FabricaVacunaBacteriana(), new FabricaVacunaViva() };
+            var efectosVenta = new IEfectoVenta[] { new EfectoVentaRetiroInventario(), new EfectoVentaSinEfecto() };
             var politica = new PoliticaCapacidadPotrero();
 
             _repositorioPotreros = new RepositorioPotrerosArchivo(datos, politica, fabricas);
@@ -79,14 +81,14 @@ namespace Caracterizacion.Rediseno
             // Los cinco servicios de dominio en que se partió Hacienda.
             var gestorPotreros = new GestorPotreros(_hacienda);
             var gestorReses = new GestorReses(_hacienda, gestorPotreros, politica, fabricas);
-            var servicioVenta = new ServicioVenta(_hacienda, gestorPotreros);
+            var servicioVenta = new ServicioVenta(_hacienda, gestorPotreros, efectosVenta);
             _fabricaVacunas = new FabricaVacunas(_hacienda, fabricasVacuna);
             var servicioVacunacion = new ServicioVacunacion(_hacienda, gestorPotreros);
 
             _potreroService = new PotreroService(_hacienda, gestorPotreros, gestorReses, _guardado);
             _resService = new ResService(_hacienda, gestorPotreros, gestorReses, servicioVenta, _guardado, new ValidadorChip());
             _vacunaService = new VacunaService(_hacienda, _fabricaVacunas, servicioVacunacion, gestorPotreros, _guardado, _repositorioCatalogo);
-            _ventaService = new VentaService(_hacienda);
+            _ventaService = new VentaService(_hacienda, servicioVenta, _guardado);
             _usuarioService = new UsuarioService(_repositorioUsuarios);
             _usuarioService.CargarUsuarios();
         }
@@ -584,9 +586,25 @@ namespace Caracterizacion.Rediseno
             _r.Titulo("VentaService.ObtenerTodasLasVentas");
             foreach (var venta in _ventaService.ObtenerTodasLasVentas())
             {
-                _r.Linea(Normalizador.Normalizar(
-                    $"{venta.Potrero.Identificacion}|{venta.Fecha:yyyy-MM-dd}|{venta.Res.Nombre}|{venta.Res.Peso}|{venta.Res.Edad}|{venta.Res.GetType().Name}|{venta.Monto}"));
+                _r.Linea(Normalizador.Normalizar(LineaDeVenta(venta)));
             }
+        }
+
+        /// <summary>
+        /// P-02 (Actividad 1) · SC-1 · Mismo volcado que en el Reto 1 cuando el
+        /// artículo es una Res —byte a byte, para que los casos 01-15 sigan
+        /// comparando idéntico contra la línea base—; rama nueva y autorizada cuando
+        /// es un producto derivado.
+        /// </summary>
+        private static string LineaDeVenta(Venta venta)
+        {
+            if (venta.Articulo is Res res)
+            {
+                return $"{venta.Potrero.Identificacion}|{venta.Fecha:yyyy-MM-dd}|{res.Nombre}|{res.Peso}|{res.Edad}|{res.GetType().Name}|{venta.Monto}";
+            }
+
+            var producto = (ProductoDerivado)venta.Articulo;
+            return $"{venta.Potrero.Identificacion}|{venta.Fecha:yyyy-MM-dd}|{producto.Nombre}|{producto.Cantidad}|{producto.Tipo}|{venta.Monto}";
         }
 
         private string LineaDeArchivo(string archivo, string clave)

@@ -3,12 +3,13 @@ using System.Text;
 namespace Caracterizacion.Rediseno
 {
     /// <summary>
-    /// Punto de entrada del arnés de la sistema REDISEÑADO.
+    /// Punto de entrada del arnés de caracterización.
     ///
-    /// Ejecuta los quince casos de ADRs.md §8.6 contra el sistema original y deja
-    /// en 04-evidencia/ la salida y una copia de los seis .txt resultantes. Nada
-    /// de esto toca los datos del repositorio: se trabaja sobre copias en un directorio
-    /// temporal, de modo que el arnés es idempotente.
+    /// Ejecuta los quince casos heredados del Reto 1 (comportamiento que debe seguir
+    /// preservado tras adoptar los patrones del Reto 2) y deja en 04-verificacion/ la
+    /// salida y una copia de los seis .txt resultantes. Nada de esto toca los datos del
+    /// repositorio: se trabaja sobre copias en un directorio temporal, de modo que el
+    /// arnés es idempotente.
     /// </summary>
     public static class PuntoDeEntrada
     {
@@ -22,8 +23,8 @@ namespace Caracterizacion.Rediseno
             Console.OutputEncoding = Encoding.UTF8;
 
             string raizReto = EncontrarRaizDelReto();
-            string semilla = Path.Combine(raizReto, "03-src", "Modificado", "p_mvcHacienda", "Datos");
-            string evidencia = Path.Combine(raizReto, "04-evidencia");
+            string semilla = Path.Combine(raizReto, "src", "Modificado", "p_mvcHacienda", "Datos");
+            string evidencia = Path.Combine(raizReto, "04-verificacion");
             string trabajo = Path.Combine(Path.GetTempPath(), "caracterizacion-rediseno");
 
             if (Directory.Exists(trabajo)) Directory.Delete(trabajo, recursive: true);
@@ -32,7 +33,7 @@ namespace Caracterizacion.Rediseno
             // El encabezado NO menciona qué versión lo produjo: los dos arneses escriben
             // exactamente el mismo texto para que el diff entre ambas salidas sea vacío.
             // Qué versión generó cada archivo lo dice su nombre.
-            registro.Linea("CARACTERIZACIÓN · casos de 02-diseno/ADRs.md §8.6");
+            registro.Linea("CARACTERIZACIÓN · casos heredados del Reto 1");
             registro.Linea("Categorías observables verificadas: 1 texto · 2 tipo de alerta · 3 navegación · 4 archivos · 5 listados · 6 consola");
 
             // --- Fixture F1: datos históricos reales ---
@@ -45,17 +46,22 @@ namespace Caracterizacion.Rediseno
             Directory.CreateDirectory(Path.Combine(raizF2, "Datos"));
             new Escenarios(registro, raizF2).Ejecutar();
 
-            // --- Fixture F3: SC-2 · casos 16 a 18 ---
+            // --- Fixture F3: SC-2 (Reto 1) · casos 16 a 18 ---
             //
-            // Van a su PROPIO archivo porque no se comparan contra la línea base: el
-            // sistema original no tiene chips. Mantenerlos fuera de salida-rediseñada.txt
-            // es lo que deja intacto el diff que prueba la preservación (§8.1).
+            // Van a su PROPIO archivo porque no se comparan contra la línea de los quince
+            // casos anteriores: no hay reses sin chip que comparar byte a byte aquí, sino
+            // el ciclo completo del chip. Mantenerlos fuera de salida-rediseñada.txt es lo
+            // que deja intacto el diff que prueba la preservación entre Reto 1 y Reto 2.
             var registroSC2 = new Registro();
-            registroSC2.Linea("SC-2 · casos 16 a 18 de 02-diseno/ADRs.md §8.6");
-            registroSC2.Linea("Solo del sistema rediseñado: verifican ADR-11 y ADR-12.");
+            registroSC2.Linea("SC-2 (Reto 1) · casos 16 a 18 · chips de geolocalización");
+            registroSC2.Linea("Verifican que la funcionalidad de SC-2 sigue intacta tras los patrones del Reto 2.");
 
             string raizF3 = Path.Combine(trabajo, "f3");
             CopiarDirectorio(semilla, Path.Combine(raizF3, "Datos"));
+            // No hay un "sistema original" en el Reto 2: la línea base es el propio
+            // rediseño del Reto 1. La ruta ya no existe en este repo (04-evidencia/ del
+            // Reto 1 no se versiona aquí), así que el caso 17 simplemente lo reporta como
+            // no encontrado en vez de comparar byte a byte, sin dejar de ejecutarse.
             string resesDelOriginal = Path.Combine(evidencia, "datos-original", "f1-historicos", "Reses.txt");
             new Escenarios(registroSC2, raizF3).EjecutarSC2(resesDelOriginal);
 
@@ -88,7 +94,7 @@ namespace Caracterizacion.Rediseno
             var directorio = new DirectoryInfo(AppContext.BaseDirectory);
             while (directorio != null)
             {
-                if (File.Exists(Path.Combine(directorio.FullName, "Reto_Modernizacion_Arquitectonica_SOLID_Enunciado_y_Rubrica.md")))
+                if (File.Exists(Path.Combine(directorio.FullName, "Reto2_Patrones_Enunciado_y_Rubrica.md")))
                 {
                     return directorio.FullName;
                 }

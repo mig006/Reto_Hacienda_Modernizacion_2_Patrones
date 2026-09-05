@@ -69,9 +69,15 @@
  }
 
  <!-- Información -->
- <div class="alert alert-info aw-card border-0">
- <strong>Información:</strong> Las ventas se registran automáticamente cuando vendes una res desde la sección de Reses.
+ <div class="alert alert-info aw-card border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+ <div>
+ <strong>Información:</strong> Las ventas de reses se registran automáticamente desde la sección de Reses.
  <a asp-controller="Res" asp-action="Index" class="a-clean">Ir a Reses →</a>
+ </div>
+ <a asp-action="VenderProducto" class="btn aw-btn aw-btn-primary shadow-sm">
+ <span class="material-icons-outlined" style="font-size: 1.2rem; vertical-align: sub;">paid</span>
+ Vender producto derivado (SC-1)
+ </a>
  </div>
 
  <!-- Tabla de ventas -->
@@ -83,46 +89,54 @@
  <thead>
  <tr>
  <th>Fecha</th>
- <th>Res Vendida</th>
+ <th>Artículo</th>
  <th>Tipo</th>
- <th>Peso</th>
+ <th>Cantidad/Peso</th>
  <th>Potrero Origen</th>
  <th>Monto</th>
- <th>Precio/kg</th>
  </tr>
  </thead>
  <tbody>
  @foreach (var venta in Model)
  {
- var precioKg = venta.Res.Peso >0 ? (double)venta.Monto / venta.Res.Peso :0;
  <tr>
  <td>
  <strong>@venta.Fecha.ToString("dd/MM/yyyy")</strong><br/>
  <small class="text-muted">@venta.Fecha.ToString("HH:mm")</small>
  </td>
- <td class="fw-semibold">@venta.Res.Nombre</td>
+ <td class="fw-semibold">@venta.Articulo.Nombre</td>
  <td>
- @if (venta.Res is Ternero)
+ @if (venta.Articulo is Ternero)
  {
  <span class="aw-badge aw-badge-info">Ternero</span>
  }
- else if (venta.Res is Novillo)
+ else if (venta.Articulo is Novillo)
  {
  <span class="aw-badge aw-badge-warning">Novillo</span>
  }
- else if (venta.Res is Cebon)
+ else if (venta.Articulo is Cebon)
  {
  <span class="aw-badge aw-badge-danger">Cebón</span>
  }
+ else if (venta.Articulo is ProductoDerivado producto)
+ {
+ <span class="aw-badge aw-badge-success">@producto.Tipo (derivado)</span>
+ }
  </td>
- <td>@venta.Res.Peso kg</td>
+ <td>
+ @if (venta.Articulo is Res res)
+ {
+ @:@res.Peso kg
+ }
+ else if (venta.Articulo is ProductoDerivado producto2)
+ {
+ @:@producto2.Cantidad unidad(es)
+ }
+ </td>
  <td>
  <span class="aw-badge aw-badge-success">@venta.Potrero.Identificacion</span>
  </td>
  <td class="fw-bold text-success">$@string.Format("{0:N0}", venta.Monto)</td>
- <td>
- <small class="text-muted">$@string.Format("{0:N0}", precioKg)/kg</small>
- </td>
  </tr>
  }
  </tbody>
@@ -130,7 +144,6 @@
  <tr>
  <td colspan="5" class="text-end fw-bold">TOTAL GENERAL:</td>
  <td class="fw-bold fs-5 text-success">$@string.Format("{0:N0}", Model.Sum(v => v.Monto))</td>
- <td></td>
  </tr>
  </tfoot>
  </table>

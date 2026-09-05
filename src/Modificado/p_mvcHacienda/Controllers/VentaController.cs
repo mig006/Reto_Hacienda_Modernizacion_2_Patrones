@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Bib_Hacienda.Clases;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using p_mvcHacienda.Servicios;
 
@@ -7,10 +8,12 @@ namespace p_mvcHacienda.Controllers
     public class VentaController : Controller
     {
         private readonly VentaService _ventaService;
+        private readonly PotreroService _potreroService;
 
-        public VentaController(VentaService ventaService)
+        public VentaController(VentaService ventaService, PotreroService potreroService)
         {
             _ventaService = ventaService;
+            _potreroService = potreroService;
         }
 
         // GET: VentaController
@@ -22,6 +25,46 @@ namespace p_mvcHacienda.Controllers
             ViewBag.Estadisticas = estadisticas;
 
             return View(ventas);
+        }
+
+        // GET: Venta/VenderProducto - SC-1 · Mostrar formulario de venta de derivados
+        [HttpGet]
+        public ActionResult VenderProducto()
+        {
+            ViewBag.Potreros = _potreroService.ObtenerTodosLosPotreros();
+            return View();
+        }
+
+        // POST: Venta/VenderProducto - SC-1 · Procesar la venta de un derivado
+        //
+        // Funcionalidad NUEVA y autorizada: SÍ consulta resultado.Exito, igual que
+        // ResController.AsignarChip (SC-2, Reto 1) y por la misma razón: no hay
+        // comportamiento previo que preservar.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult VenderProducto(string potreroId, TipoProducto tipoProducto, uint cantidad, uint monto)
+        {
+            if (string.IsNullOrWhiteSpace(potreroId) || cantidad <= 0 || monto <= 0)
+            {
+                ViewBag.Mensaje = "Potrero, cantidad y monto son requeridos, y deben ser mayores a 0";
+                ViewBag.TipoMensaje = "danger";
+                ViewBag.Potreros = _potreroService.ObtenerTodosLosPotreros();
+                return View();
+            }
+
+            var resultado = _ventaService.VenderProducto(potreroId, tipoProducto, cantidad, monto);
+
+            if (resultado.Exito)
+            {
+                TempData["Mensaje"] = resultado.Mensaje;
+                TempData["TipoMensaje"] = "success";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Mensaje = resultado.Mensaje;
+            ViewBag.TipoMensaje = "danger";
+            ViewBag.Potreros = _potreroService.ObtenerTodosLosPotreros();
+            return View();
         }
 
         // GET: VentaController/Details/5

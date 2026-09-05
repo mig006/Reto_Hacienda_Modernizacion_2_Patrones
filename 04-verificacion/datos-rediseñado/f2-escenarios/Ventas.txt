@@ -1,0 +1,2 @@
+Potrero_Novillos|<HOY>|Trueno|550|60|Novillo|2500000
+Potrero_Novillos|2030-05-05|Incoherente|500|10|Novillo|1000000

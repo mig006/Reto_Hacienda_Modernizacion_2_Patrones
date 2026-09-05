@@ -1,6 +1,7 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
 using Bib_Hacienda.Valores;
@@ -52,6 +53,7 @@ namespace Demostracion
             Escenario7_CaminosDeError();
             Escenario8_DeudaCongelada();
             Escenario9_SolicitudDeCambio2();
+            Escenario10_SolicitudDeCambioSC1();
 
             Titulo("FIN DE LA DEMOSTRACIÓN");
             Console.WriteLine("Los seis archivos .txt quedaron en " + Path.Combine(trabajo, "Datos"));
@@ -71,6 +73,7 @@ namespace Demostracion
             // Infraestructura: las implementaciones concretas solo se nombran AQUÍ.
             var fabricas = new IFabricaRes[] { new FabricaTernero(), new FabricaCebon(), new FabricaNovillo() };
             var fabricasVacuna = new IFabricaVacuna[] { new FabricaVacunaBacteriana(), new FabricaVacunaViva() };
+            var efectosVenta = new IEfectoVenta[] { new EfectoVentaRetiroInventario(), new EfectoVentaSinEfecto() };
             var politica = new PoliticaCapacidadPotrero();
 
             IRepositorioPotreros repoPotreros = new RepositorioPotrerosArchivo(datos, politica, fabricas);
@@ -85,17 +88,20 @@ namespace Demostracion
             var hacienda = new Hacienda();
             var gestorPotreros = new GestorPotreros(hacienda);
             var gestorReses = new GestorReses(hacienda, gestorPotreros, politica, fabricas);
-            var servicioVenta = new ServicioVenta(hacienda, gestorPotreros);
+            var servicioVenta = new ServicioVenta(hacienda, gestorPotreros, efectosVenta);
             _fabricaVacunas = new FabricaVacunas(hacienda, fabricasVacuna);
             var servicioVacunacion = new ServicioVacunacion(hacienda, gestorPotreros);
 
             // Aplicación.
             _potreros = new PotreroService(hacienda, gestorPotreros, gestorReses, guardado);
-            // SC-2 · La solicitud de cambio implementada. Para enchufarla NO hubo que
-            // modificar ninguna línea anterior de este método: solo pasar un validador más.
+            // SC-2 · La solicitud de cambio implementada en el Reto 1. Para enchufarla NO
+            // hubo que modificar ninguna línea anterior de este método: solo pasar un
+            // validador más.
             _reses = new ResService(hacienda, gestorPotreros, gestorReses, servicioVenta, guardado, new ValidadorChip());
             _vacunas = new VacunaService(hacienda, _fabricaVacunas, servicioVacunacion, gestorPotreros, guardado, repoCatalogo);
-            _ventas = new VentaService(hacienda);
+            // SC-1 · La solicitud de cambio del Reto 2: VentaService gana las dos
+            // dependencias que necesita para vender un producto derivado (Strategy P-02).
+            _ventas = new VentaService(hacienda, servicioVenta, guardado);
             _usuarios = new UsuarioService(repoUsuarios);
             _usuarios.CargarUsuarios();
 
@@ -292,6 +298,42 @@ namespace Demostracion
             }
             Nota("'Rayo' se quedó sin chip: su línea tiene cinco columnas, idénticas a las de");
             Nota("siempre. Por eso los quince casos de caracterización siguen pasando tras SC-2.");
+        }
+
+        private static void Escenario10_SolicitudDeCambioSC1()
+        {
+            Titulo("10 · SC-1 IMPLEMENTADA (Reto 2) · venta de productos derivados");
+            Nota("Strategy (P-02, Actividad 2): vender una res retira del potrero;");
+            Nota("vender un derivado NO toca el inventario. Es el mismo ServicioVenta,");
+            Nota("sin un solo `if` nuevo: el efecto lo resuelve el registro de IEfectoVenta.");
+
+            var reses_antes = _reses.ObtenerTodasLasReses().Count;
+
+            Ejecutar("Vender 200 litros de leche de 'Potrero_Cebones'",
+                () => _ventas.VenderProducto("Potrero_Cebones", TipoProducto.Lacteo, 200, 800000));
+            Ejecutar("Vender 80 kg de carne de 'Potrero_Novillos'",
+                () => _ventas.VenderProducto("Potrero_Novillos", TipoProducto.Carne, 80, 1200000));
+            Ejecutar("Vender 5 unidades de piel de 'Potrero_Novillos'",
+                () => _ventas.VenderProducto("Potrero_Novillos", TipoProducto.Piel, 5, 300000));
+
+            var reses_despues = _reses.ObtenerTodasLasReses().Count;
+            Console.WriteLine($"\n  Reses antes de las tres ventas: {reses_antes}   ·   después: {reses_despues}");
+            Nota("El inventario de ganado no cambió: EfectoVentaSinEfecto no hace nada.");
+
+            Console.WriteLine("\n  VentaService.ObtenerTodasLasVentas (incluye reses y derivados):");
+            foreach (var venta in _ventas.ObtenerTodasLasVentas().Take(5))
+            {
+                Console.WriteLine($"      {venta.Fecha:yyyy-MM-dd}  {venta.Articulo.Nombre,-10}  {venta.Potrero.Identificacion,-18}  ${venta.Monto:N0}");
+            }
+
+            Titulo("10b · las filas de res y de producto conviven en Ventas.txt");
+            Nota("Misma forma de fila para las dos: {potrero}|{fecha}|{nombre}|{magnitud}|{edad}|{tipo}|{monto}.");
+            Nota("Una venta de res no cambia un solo byte: sigue siendo la misma rama de siempre.");
+            string rutaVentas = Path.Combine(_directorioDatos, "Ventas.txt");
+            foreach (var linea in File.ReadAllLines(rutaVentas))
+            {
+                Console.WriteLine("      " + linea);
+            }
         }
 
         // ── Utilidades de presentación ────────────────────────────────────────
