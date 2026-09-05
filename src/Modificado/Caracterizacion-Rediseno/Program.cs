@@ -17,6 +17,7 @@ namespace Caracterizacion.Rediseno
         private const string NombreDatos = "datos-rediseñado";
         private const string NombreSalidaSC2 = "salida-sc2.txt";
         private const string NombreDatosSC2 = "datos-sc2";
+        private const string NombreSalidaPatrones = "salida-patrones.txt";
 
         public static int Main(string[] args)
         {
@@ -65,6 +66,18 @@ namespace Caracterizacion.Rediseno
             string resesDelOriginal = Path.Combine(evidencia, "datos-original", "f1-historicos", "Reses.txt");
             new Escenarios(registroSC2, raizF3).EjecutarSC2(resesDelOriginal);
 
+            // --- Fixture F4: patrones del Reto 2 · casos 19 a 22 (Actividad 4.2) ---
+            //
+            // Igual que F3: van a su propio archivo porque no hay línea base del Reto 1
+            // con la que compararlos.
+            var registroPatrones = new Registro();
+            registroPatrones.Linea("Patrones del Reto 2 · casos 19 a 22");
+            registroPatrones.Linea("Ejercitan lo que Observer, Strategy y Composite tocan; no comparan contra el Reto 1.");
+
+            string raizF4 = Path.Combine(trabajo, "f4");
+            CopiarDirectorio(semilla, Path.Combine(raizF4, "Datos"));
+            new Escenarios(registroPatrones, raizF4).EjecutarPatronesReto2();
+
             // --- Volcado de evidencia ---
             Directory.CreateDirectory(evidencia);
             string rutaSalida = Path.Combine(evidencia, NombreSalida);
@@ -82,8 +95,12 @@ namespace Caracterizacion.Rediseno
             if (Directory.Exists(destinoSC2)) Directory.Delete(destinoSC2, recursive: true);
             CopiarDatosNormalizados(Path.Combine(raizF3, "Datos"), destinoSC2);
 
+            string rutaSalidaPatrones = Path.Combine(evidencia, NombreSalidaPatrones);
+            File.WriteAllText(rutaSalidaPatrones, registroPatrones.ToString(), new UTF8Encoding(false));
+
             Console.WriteLine($"Salida escrita en  : {rutaSalida}");
             Console.WriteLine($"Salida SC-2 en     : {rutaSalidaSC2}");
+            Console.WriteLine($"Salida patrones en : {rutaSalidaPatrones}");
             Console.WriteLine($"Datos copiados en  : {destinoDatos}");
             return 0;
         }
