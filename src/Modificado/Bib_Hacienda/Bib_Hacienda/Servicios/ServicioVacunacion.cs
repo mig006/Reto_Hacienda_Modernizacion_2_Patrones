@@ -1,7 +1,9 @@
 using Bib_Hacienda.Clases;
+using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Valores;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bib_Hacienda.Servicios
@@ -19,20 +21,31 @@ namespace Bib_Hacienda.Servicios
     /// Aquí se ve la ganancia de SRP en concreto: si el veterinario cambia el esquema de
     /// vacunación, antes había que abrir Hacienda —558 líneas, con las reglas de potreros
     /// y de ventas al lado—; ahora solo se abre este archivo.
+    ///
+    /// ══ Observer (P-03, Actividad 2) ═════════════════════════════════════════════
+    /// Las dos instanciaciones con <c>new</c> desaparecen, pero de dos formas distintas.
+    /// <see cref="PublisherVacunacionCompletada"/> es una notificación real y entra por
+    /// <see cref="IPublicadorEvento"/>, en una lista de un solo elemento — el registro
+    /// existe igual porque un segundo aviso de vacunación (a futuro) no debe volver a
+    /// tocar esta clase. <see cref="PublisherVacunaVencida"/> NO entra por esa interfaz:
+    /// su <c>bool</c> decide si <see cref="aplicar_vacuna"/> lanza, así que es una guarda
+    /// de flujo, no un aviso, y forzarla dentro del patrón convertiría un aviso en
+    /// control de flujo. Sigue inyectada por constructor, solo que como lo que es.
     /// </summary>
     public class ServicioVacunacion
     {
         private readonly Hacienda _hacienda;
         private readonly GestorPotreros _gestorPotreros;
+        private readonly PublisherVacunaVencida _publisherVacunaVencida;
+        private readonly IReadOnlyCollection<IPublicadorEvento> _avisosVacunacion;
 
-        //Eventos
-        private PublisherVacunacionCompletada publisher_vacunacion_completa = new PublisherVacunacionCompletada();
-        private PublisherVacunaVencida publisher_vacuna_vencida = new PublisherVacunaVencida();
-
-        public ServicioVacunacion(Hacienda hacienda, GestorPotreros gestorPotreros)
+        public ServicioVacunacion(Hacienda hacienda, GestorPotreros gestorPotreros,
+            PublisherVacunaVencida publisherVacunaVencida, IEnumerable<IPublicadorEvento> avisosVacunacion)
         {
             _hacienda = hacienda;
             _gestorPotreros = gestorPotreros;
+            _publisherVacunaVencida = publisherVacunaVencida;
+            _avisosVacunacion = new List<IPublicadorEvento>(avisosVacunacion);
         }
 
         //Metodo para aplicar vacuna
@@ -90,7 +103,7 @@ namespace Bib_Hacienda.Servicios
                 var eventoVencimiento = new AcumuladorMensajes();
 
                 //Validar fecha de vencimiento de la vacuna
-                bool vacuna_vencida = publisher_vacuna_vencida.Informar_Vacuna_Vencida(vacuna, eventoVencimiento);
+                bool vacuna_vencida = _publisherVacunaVencida.Informar_Vacuna_Vencida(vacuna, eventoVencimiento);
 
                 if (vacuna_vencida)
                 {
@@ -113,8 +126,12 @@ namespace Bib_Hacienda.Servicios
 
                     var eventoEsquema = new AcumuladorMensajes();
 
-                    //Disparar evento de vacunacion completa
-                    bool esquema_completo = publisher_vacunacion_completa.Informar_Vacunacion_Completada(res, contador_bacterianas, contador_vivas, eventoEsquema);
+                    //Disparar evento de vacunacion completa (Observer, P-03, Actividad 2)
+                    var contexto = new ContextoAviso { Res = res, ContadorBacterianas = contador_bacterianas, ContadorVivas = contador_vivas };
+                    foreach (var aviso in _avisosVacunacion)
+                    {
+                        aviso.Informar(contexto, eventoEsquema);
+                    }
 
                     return $"Vacuna aplicada correctamente a la res {res.Nombre}. {eventoEsquema.Ultimo}";
                 }

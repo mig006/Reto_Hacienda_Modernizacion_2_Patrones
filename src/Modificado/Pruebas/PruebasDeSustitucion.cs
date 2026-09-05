@@ -2,6 +2,7 @@ using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
+using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Reglas;
 using Bib_Hacienda.Servicios;
@@ -211,11 +212,13 @@ namespace Bib_Hacienda.Pruebas
         {
             var hacienda = new Hacienda();
             var gestorPotreros = new GestorPotreros(hacienda);
-            var gestorReses = new GestorReses(hacienda, gestorPotreros, new PoliticaCapacidadPotrero(), Fabricas);
+            var avisosPeso = new IPublicadorEvento[] { new PublisherPesoMin(), new PublisherPesoVenta() };
+            var gestorReses = new GestorReses(hacienda, gestorPotreros, new PoliticaCapacidadPotrero(), Fabricas,
+                avisosAltaDeRes: Array.Empty<IPublicadorEvento>(), avisosAlimentacion: avisosPeso);
 
             gestorPotreros.crear_potrero("P_Terneros", l_tipos_potreros.ternero);
             var potrero = gestorPotreros.buscar_potrero("P_Terneros");
-            potrero.anadir_res("Pinta", 6, 10, new PoliticaCapacidadPotrero(), Fabricas);
+            potrero.anadir_res("Pinta", 6, 10, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
 
             for (int i = 0; i < 200; i++)
             {
@@ -289,8 +292,72 @@ namespace Bib_Hacienda.Pruebas
             }
 
             var potrero = new Potrero("P", l_tipos_potreros.ternero);
-            potrero.anadir_res("Pinta", 6, 100, new PoliticaCapacidadPotrero(), Fabricas);
+            potrero.anadir_res("Pinta", 6, 100, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
             Assert.Null(potrero.L_reses.Single().Chip);
+        }
+
+        // ══ Observer (Actividad 2 · P-03) · IPublicadorEvento ═════════════════════
+
+        /// <summary>Aviso de prueba que siempre notifica, para verificar orden de disparo.</summary>
+        private sealed class AvisoDePrueba : IPublicadorEvento
+        {
+            private readonly string _etiqueta;
+            public AvisoDePrueba(string etiqueta) => _etiqueta = etiqueta;
+            public void Informar(ContextoAviso contexto, IReceptorEventos receptor) => receptor.Notificar(_etiqueta);
+        }
+
+        /// <summary>Aviso de prueba que captura el ContextoAviso recibido, sin notificar.</summary>
+        private sealed class AvisoCapturador : IPublicadorEvento
+        {
+            private readonly Action<ContextoAviso> _capturar;
+            public AvisoCapturador(Action<ContextoAviso> capturar) => _capturar = capturar;
+            public void Informar(ContextoAviso contexto, IReceptorEventos receptor) => _capturar(contexto);
+        }
+
+        /// <summary>
+        /// El orden de disparo lo fija el orden de la colección registrada, no el
+        /// publicador ni Potrero/GestorReses: tres avisos que no son ninguno de los cinco
+        /// reales, sustituidos sin tocar el código de producción, disparan en el orden en
+        /// que se registraron. Es la prueba de sustitución que Observer exige.
+        /// </summary>
+        [Fact]
+        public void ElOrdenDeDisparoLoFijaElOrdenDeRegistroNoElPublicadorNiElConsumidor()
+        {
+            var hacienda = new Hacienda();
+            var gestorPotreros = new GestorPotreros(hacienda);
+            var avisos = new IPublicadorEvento[] { new AvisoDePrueba("A"), new AvisoDePrueba("B"), new AvisoDePrueba("C") };
+            var gestorReses = new GestorReses(hacienda, gestorPotreros, new PoliticaCapacidadPotrero(), Fabricas,
+                avisosAltaDeRes: Array.Empty<IPublicadorEvento>(), avisosAlimentacion: avisos);
+
+            gestorPotreros.crear_potrero("P", l_tipos_potreros.ternero);
+            var potrero = gestorPotreros.buscar_potrero("P");
+            potrero.anadir_res("Pinta", 6, 100, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
+
+            string mensaje = gestorReses.alimentar_res("P", "Pinta", 1);
+
+            Assert.True(mensaje.IndexOf('A') < mensaje.IndexOf('B') && mensaje.IndexOf('B') < mensaje.IndexOf('C'),
+                $"Orden inesperado: {mensaje}");
+        }
+
+        /// <summary>
+        /// Potrero.anadir_res construye UN solo ContextoAviso compartido —no uno por
+        /// publicador— con Potrero, CantidadReses y Res ya poblados. Es el costo que la
+        /// Actividad 2 declara: cualquier aviso puede leer estos tres campos aunque no
+        /// los necesite todos.
+        /// </summary>
+        [Fact]
+        public void PotreroConstruyeUnContextoUnicoConPotreroCantidadYRes()
+        {
+            ContextoAviso capturado = null;
+            var capturador = new AvisoCapturador(c => capturado = c);
+
+            var potrero = new Potrero("P1", l_tipos_potreros.ternero);
+            potrero.anadir_res("Pinta", 6, 100, new PoliticaCapacidadPotrero(), Fabricas, new IPublicadorEvento[] { capturador });
+
+            Assert.NotNull(capturado);
+            Assert.Same(potrero, capturado.Potrero);
+            Assert.Equal((ushort)1, capturado.CantidadReses);
+            Assert.Equal("Pinta", capturado.Res.Nombre);
         }
 
         // ══ Strategy (Actividad 2 · P-02) · IEfectoVenta ══════════════════════════
@@ -311,7 +378,7 @@ namespace Bib_Hacienda.Pruebas
 
             gestorPotreros.crear_potrero("P_Cebones", l_tipos_potreros.cebon);
             var potrero = gestorPotreros.buscar_potrero("P_Cebones");
-            potrero.anadir_res("Rayo", 20, 200, new PoliticaCapacidadPotrero(), Fabricas);
+            potrero.anadir_res("Rayo", 20, 200, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
 
             Assert.Single(potrero.L_reses);
 

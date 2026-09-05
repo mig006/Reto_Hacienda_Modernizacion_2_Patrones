@@ -2,6 +2,7 @@ using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
+using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
 using Bib_Hacienda.Valores;
@@ -55,7 +56,14 @@ namespace p_mvcHacienda.Composicion
             builder.Services.AddSingleton<IRepositorioPotreros>(sp => new RepositorioPotrerosArchivo(
                 datos,
                 sp.GetRequiredService<PoliticaCapacidadPotrero>(),
-                sp.GetServices<IFabricaRes>()));
+                sp.GetServices<IFabricaRes>(),
+                new IPublicadorEvento[]
+                {
+                    sp.GetRequiredService<PublisherPotreroMitad>(),
+                    sp.GetRequiredService<PublisherPotreroLleno>(),
+                    sp.GetRequiredService<PublisherPesoMin>(),
+                    sp.GetRequiredService<PublisherPesoVenta>(),
+                }));
             builder.Services.AddSingleton<IRepositorioVentas>(sp => new RepositorioVentasArchivo(
                 datos,
                 sp.GetServices<IFabricaRes>()));
@@ -124,14 +132,64 @@ namespace p_mvcHacienda.Composicion
             builder.Services.AddSingleton<IEfectoVenta, EfectoVentaRetiroInventario>();
             builder.Services.AddSingleton<IEfectoVenta, EfectoVentaSinEfecto>();
 
+            // ── Publicadores de eventos · Observer (ADR-15, P-03, Actividad 2) ──────
+            //
+            // Las ocho instanciaciones con `new` que había dentro de Potrero, GestorReses
+            // y ServicioVacunacion desaparecen. Cada publicador se registra UNA VEZ como
+            // singleton concreto; a quién se le entrega y en qué orden se decide más abajo,
+            // al construir GestorReses y ServicioVacunacion — eso ES el patrón: quién
+            // colabora con quién se lee aquí, no adivinando entre `new` repartidos.
+            builder.Services.AddSingleton<PublisherPotreroMitad>();
+            builder.Services.AddSingleton<PublisherPotreroLleno>();
+            builder.Services.AddSingleton<PublisherPesoMin>();
+            builder.Services.AddSingleton<PublisherPesoVenta>();
+            builder.Services.AddSingleton<PublisherVacunacionCompletada>();
+
+            // PublisherVacunaVencida NO implementa IPublicadorEvento: su bool decide si
+            // ServicioVacunacion.aplicar_vacuna lanza, así que es una guarda de flujo, no
+            // un aviso (ver la ficha de Observer en la Actividad 3.3). Se registra igual,
+            // para que tampoco quede un `new` suyo dentro del dominio.
+            builder.Services.AddSingleton<PublisherVacunaVencida>();
+
             builder.Services.AddSingleton<PoliticaCapacidadPotrero>();
 
             // ── Servicios de dominio · las seis responsabilidades que tenía Hacienda ──
             builder.Services.AddSingleton<GestorPotreros>();
-            builder.Services.AddSingleton<GestorReses>();
+
+            // GestorReses necesita DOS listas de avisos distintas (alta de res dispara
+            // cuatro; alimentar dispara dos), así que no se puede dejar que el contenedor
+            // resuelva IEnumerable<IPublicadorEvento> por sí solo: daría la MISMA lista
+            // completa a los dos parámetros. El orden de cada lista es el orden de
+            // disparo — mitad, lleno, peso mínimo, peso de venta para el alta, tal como
+            // exigía Potrero.cs:135-138 del Reto 1.
+            builder.Services.AddSingleton<GestorReses>(sp => new GestorReses(
+                sp.GetRequiredService<Hacienda>(),
+                sp.GetRequiredService<GestorPotreros>(),
+                sp.GetRequiredService<PoliticaCapacidadPotrero>(),
+                sp.GetServices<IFabricaRes>(),
+                avisosAltaDeRes: new IPublicadorEvento[]
+                {
+                    sp.GetRequiredService<PublisherPotreroMitad>(),
+                    sp.GetRequiredService<PublisherPotreroLleno>(),
+                    sp.GetRequiredService<PublisherPesoMin>(),
+                    sp.GetRequiredService<PublisherPesoVenta>(),
+                },
+                avisosAlimentacion: new IPublicadorEvento[]
+                {
+                    sp.GetRequiredService<PublisherPesoMin>(),
+                    sp.GetRequiredService<PublisherPesoVenta>(),
+                }));
+
             builder.Services.AddSingleton<ServicioVenta>();
             builder.Services.AddSingleton<FabricaVacunas>();
-            builder.Services.AddSingleton<ServicioVacunacion>();
+
+            // Un solo aviso en la lista (vacunación completada); PublisherVacunaVencida
+            // entra por su propio parámetro, no por esta lista.
+            builder.Services.AddSingleton<ServicioVacunacion>(sp => new ServicioVacunacion(
+                sp.GetRequiredService<Hacienda>(),
+                sp.GetRequiredService<GestorPotreros>(),
+                sp.GetRequiredService<PublisherVacunaVencida>(),
+                new IPublicadorEvento[] { sp.GetRequiredService<PublisherVacunacionCompletada>() }));
 
             // ── Secuencia validar → persistir ────────────────────────────────────
             builder.Services.AddSingleton<GuardadoValidado>();

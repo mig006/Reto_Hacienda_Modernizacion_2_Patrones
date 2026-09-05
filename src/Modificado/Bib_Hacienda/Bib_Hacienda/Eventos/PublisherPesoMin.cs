@@ -1,11 +1,13 @@
 using System;
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Valores;
 
 namespace Bib_Hacienda.Eventos
 {
     /// <summary>
-    /// ADR-07 · Informa si una res está por debajo de su peso mínimo.
+    /// ADR-07 · Observer (P-03, Actividad 2) · Informa si una res está por debajo de su
+    /// peso mínimo.
     ///
     /// El delegado y el evento desaparecieron: el destinatario llega por parámetro y
     /// vive lo que dura la llamada. Y con ellos desapareció el OPERADOR IMPLÍCITO que
@@ -15,8 +17,12 @@ namespace Bib_Hacienda.Eventos
     /// cliente lo invocaba, así que borrarlo no cambió ninguna salida: cuatro líneas
     /// menos y el arreglo con mejor relación costo/beneficio de todo el diagnóstico.
     /// </summary>
-    public class PublisherPesoMin
+    public class PublisherPesoMin : IPublicadorEvento
     {
+        /// <summary>Lee Res de ContextoAviso; ignora Potrero, CantidadReses y los contadores.</summary>
+        public void Informar(ContextoAviso contexto, IReceptorEventos receptor)
+            => Informar_Peso_Min(contexto.Res, receptor);
+
         //Metodo para informar si la res está por debajo del peso mínimo
         public void Informar_Peso_Min(Res res, IReceptorEventos receptor)
         {

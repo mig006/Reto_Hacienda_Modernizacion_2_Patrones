@@ -103,10 +103,10 @@ namespace Bib_Hacienda.Pruebas
             string datos = Path.Combine(Path.GetTempPath(), "pruebas-hacienda", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(datos);
 
-            var repositorio = new RepositorioPotrerosArchivo(datos, new PoliticaCapacidadPotrero(), Fabricas);
+            var repositorio = new RepositorioPotrerosArchivo(datos, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
             var potrero = new Potrero("Potrero_Cebones", l_tipos_potreros.cebon);
-            potrero.anadir_res("Rayo", 14, 287, new PoliticaCapacidadPotrero(), Fabricas);
-            potrero.anadir_res("Luna", 27, 301, new PoliticaCapacidadPotrero(), Fabricas);
+            potrero.anadir_res("Rayo", 14, 287, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
+            potrero.anadir_res("Luna", 27, 301, new PoliticaCapacidadPotrero(), Fabricas, Array.Empty<IPublicadorEvento>());
             potrero.L_reses[0].AsignarChip(new Chip("CHIP-0417", 6.2442, -75.5812, new DateTime(2026, 8, 8)));
 
             var enMemoria = new List<Potrero> { potrero };

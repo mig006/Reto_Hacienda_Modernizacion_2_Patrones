@@ -1,13 +1,21 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Reglas;
+using Bib_Hacienda.Valores;
 using System;
 
 namespace Bib_Hacienda.Eventos
 {
-    /// <summary>ADR-07 · Informa que el potrero alcanzó la mitad de su capacidad.</summary>
-    public class PublisherPotreroMitad
+    /// <summary>
+    /// ADR-07 · Observer (P-03, Actividad 2) · Informa que el potrero alcanzó la mitad
+    /// de su capacidad.
+    /// </summary>
+    public class PublisherPotreroMitad : IPublicadorEvento
     {
+        /// <summary>Lee CantidadReses y Potrero de ContextoAviso; ignora Res y los contadores.</summary>
+        public void Informar(ContextoAviso contexto, IReceptorEventos receptor)
+            => Informar_Potrero_Mitad(contexto.CantidadReses, contexto.Potrero, receptor);
+
         //Metodo que salta el evento cuando el potrero alcanza la mitad de su capacidad
         public void Informar_Potrero_Mitad(ushort cantidad_reses, Potrero potrero, IReceptorEventos receptor)
         {

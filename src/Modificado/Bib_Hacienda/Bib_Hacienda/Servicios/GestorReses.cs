@@ -1,6 +1,5 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Contratos;
-using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Valores;
 using System;
 using System.Collections.Generic;
@@ -26,17 +25,24 @@ namespace Bib_Hacienda.Servicios
         private readonly PoliticaCapacidadPotrero _politica;
         private readonly IReadOnlyCollection<IFabricaRes> _fabricas;
 
-        //Eventos
-        private PublisherPesoMin publisher_peso_min = new PublisherPesoMin();
-        private PublisherPesoVenta publisher_peso_ideal = new PublisherPesoVenta();
+        // Observer (P-03, Actividad 2) · Dos registros, no uno: alta de res dispara los
+        // cuatro avisos (se los reenvía a Potrero.anadir_res, que es quien de verdad los
+        // dispara); alimentar solo dispara los dos de peso. Son los mismos publicadores
+        // de peso en los dos registros —mismas instancias, dos listas distintas— porque
+        // el orden de disparo lo decide cada lista, no el publicador.
+        private readonly IReadOnlyCollection<IPublicadorEvento> _avisosAltaDeRes;
+        private readonly IReadOnlyCollection<IPublicadorEvento> _avisosAlimentacion;
 
         public GestorReses(Hacienda hacienda, GestorPotreros gestorPotreros,
-            PoliticaCapacidadPotrero politica, IEnumerable<IFabricaRes> fabricas)
+            PoliticaCapacidadPotrero politica, IEnumerable<IFabricaRes> fabricas,
+            IEnumerable<IPublicadorEvento> avisosAltaDeRes, IEnumerable<IPublicadorEvento> avisosAlimentacion)
         {
             _hacienda = hacienda;
             _gestorPotreros = gestorPotreros;
             _politica = politica;
             _fabricas = new List<IFabricaRes>(fabricas);
+            _avisosAltaDeRes = new List<IPublicadorEvento>(avisosAltaDeRes);
+            _avisosAlimentacion = new List<IPublicadorEvento>(avisosAlimentacion);
         }
 
         //Metodo para  anadir res a un potrero
@@ -45,7 +51,7 @@ namespace Bib_Hacienda.Servicios
             try
             {
                 Potrero potrero = _gestorPotreros.buscar_potrero(id_potrero);
-                string resultado = potrero.anadir_res(nombre, edad, peso, _politica, _fabricas);
+                string resultado = potrero.anadir_res(nombre, edad, peso, _politica, _fabricas, _avisosAltaDeRes);
                 return resultado;
             }
             catch (Exception er)
@@ -73,9 +79,12 @@ namespace Bib_Hacienda.Servicios
                 // ADR-07 · Dos suscripciones por llamada que nunca se deshacían.
                 var eventos = new AcumuladorMensajes();
 
-                //Disparar los eventos con la res actualizada
-                publisher_peso_min.Informar_Peso_Min(res, eventos);
-                publisher_peso_ideal.Informar_Peso_Venta(res, eventos);
+                //Disparar los eventos con la res actualizada (Observer, P-03, Actividad 2)
+                var contexto = new ContextoAviso { Res = res };
+                foreach (var aviso in _avisosAlimentacion)
+                {
+                    aviso.Informar(contexto, eventos);
+                }
 
                 //Construir mensaje de retorno
                 mensaje_final = $"La res '{res.Nombre}' ha sido alimentada, ahora pesa {res.Peso} kg.";
@@ -184,9 +193,12 @@ namespace Bib_Hacienda.Servicios
                 // jornada de 200 alimentaciones había 400 manejadores vivos.
                 var eventos = new AcumuladorMensajes();
 
-                //Disparar los eventos con la res actualizada
-                publisher_peso_min.Informar_Peso_Min(res, eventos);
-                publisher_peso_ideal.Informar_Peso_Venta(res, eventos);
+                //Disparar los eventos con la res actualizada (Observer, P-03, Actividad 2)
+                var contexto = new ContextoAviso { Res = res };
+                foreach (var aviso in _avisosAlimentacion)
+                {
+                    aviso.Informar(contexto, eventos);
+                }
 
                 //Construir mensaje de retorno
                 string mensaje_final = $"La res '{res.Nombre}' ha sido alimentada, ahora pesa {res.Peso} kg.";

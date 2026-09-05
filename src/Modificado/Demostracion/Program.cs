@@ -2,6 +2,7 @@ using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
+using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
 using Bib_Hacienda.Valores;
@@ -76,7 +77,20 @@ namespace Demostracion
             var efectosVenta = new IEfectoVenta[] { new EfectoVentaRetiroInventario(), new EfectoVentaSinEfecto() };
             var politica = new PoliticaCapacidadPotrero();
 
-            IRepositorioPotreros repoPotreros = new RepositorioPotrerosArchivo(datos, politica, fabricas);
+            // Observer (P-03, Actividad 2) · publicadores, registrados una sola vez.
+            // El orden de cada lista de abajo ES el orden de disparo.
+            var publisherMitad = new PublisherPotreroMitad();
+            var publisherLleno = new PublisherPotreroLleno();
+            var publisherPesoMin = new PublisherPesoMin();
+            var publisherPesoVenta = new PublisherPesoVenta();
+            var publisherVacunacionCompletada = new PublisherVacunacionCompletada();
+            var publisherVacunaVencida = new PublisherVacunaVencida();
+
+            var avisosAltaDeRes = new IPublicadorEvento[] { publisherMitad, publisherLleno, publisherPesoMin, publisherPesoVenta };
+            var avisosAlimentacion = new IPublicadorEvento[] { publisherPesoMin, publisherPesoVenta };
+            var avisosVacunacion = new IPublicadorEvento[] { publisherVacunacionCompletada };
+
+            IRepositorioPotreros repoPotreros = new RepositorioPotrerosArchivo(datos, politica, fabricas, avisosAltaDeRes);
             IRepositorioVentas repoVentas = new RepositorioVentasArchivo(datos, fabricas);
             IRepositorioCatalogoVacunas repoCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
             IRepositorioUsuarios repoUsuarios = new RepositorioUsuariosArchivo(datos);
@@ -87,10 +101,10 @@ namespace Demostracion
             // Dominio: la raíz de agregados y los cinco servicios en que se partió Hacienda.
             var hacienda = new Hacienda();
             var gestorPotreros = new GestorPotreros(hacienda);
-            var gestorReses = new GestorReses(hacienda, gestorPotreros, politica, fabricas);
+            var gestorReses = new GestorReses(hacienda, gestorPotreros, politica, fabricas, avisosAltaDeRes, avisosAlimentacion);
             var servicioVenta = new ServicioVenta(hacienda, gestorPotreros, efectosVenta);
             _fabricaVacunas = new FabricaVacunas(hacienda, fabricasVacuna);
-            var servicioVacunacion = new ServicioVacunacion(hacienda, gestorPotreros);
+            var servicioVacunacion = new ServicioVacunacion(hacienda, gestorPotreros, publisherVacunaVencida, avisosVacunacion);
 
             // Aplicación.
             _potreros = new PotreroService(hacienda, gestorPotreros, gestorReses, guardado);

@@ -28,15 +28,21 @@ namespace p_mvcHacienda.Infraestructura
         private readonly string _directorioArchivos;
         private readonly PoliticaCapacidadPotrero _politica;
         private readonly IReadOnlyCollection<IFabricaRes> _fabricas;
+        private readonly IReadOnlyCollection<IPublicadorEvento> _avisosAltaDeRes;
 
-        // La política y las fábricas llegan del composition root porque hay que
-        // entregárselas a Potrero.anadir_res, que es una entidad y no las puede pedir.
+        // La política, las fábricas y los avisos llegan del composition root porque hay
+        // que entregárselos a Potrero.anadir_res, que es una entidad y no los puede pedir.
+        // Los avisos SÍ importan aquí aunque el mensaje de retorno de anadir_res se
+        // descarte (:92): son el mismo registro que usa GestorReses, y pasar uno vacío
+        // solo porque hoy nadie lee el mensaje sería una fidelidad rota a propósito.
         public RepositorioPotrerosArchivo(string directorioArchivos,
-            PoliticaCapacidadPotrero politica, IEnumerable<IFabricaRes> fabricas)
+            PoliticaCapacidadPotrero politica, IEnumerable<IFabricaRes> fabricas,
+            IEnumerable<IPublicadorEvento> avisosAltaDeRes)
         {
             _directorioArchivos = directorioArchivos;
             _politica = politica;
             _fabricas = new List<IFabricaRes>(fabricas);
+            _avisosAltaDeRes = new List<IPublicadorEvento>(avisosAltaDeRes);
             if (!Directory.Exists(_directorioArchivos))
             {
                 Directory.CreateDirectory(_directorioArchivos);
@@ -89,7 +95,7 @@ namespace p_mvcHacienda.Infraestructura
                     {
                         // Se delega en el dominio, igual que hoy (PersistenciaService.cs:378):
                         // el subtipo de la res lo decide el potrero, no el archivo.
-                        potrero.anadir_res(nombreRes, edad, peso, _politica, _fabricas);
+                        potrero.anadir_res(nombreRes, edad, peso, _politica, _fabricas, _avisosAltaDeRes);
 
                         // SC-2 · ADR-11 · El chip se conecta DESPUÉS de que la res existe,
                         // que es la misma secuencia que sigue el negocio. Por eso la carga

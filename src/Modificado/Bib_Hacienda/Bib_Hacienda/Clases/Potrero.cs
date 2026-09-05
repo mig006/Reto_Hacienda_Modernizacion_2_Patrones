@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bib_Hacienda.Contratos;
-using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Servicios;
 using Bib_Hacienda.Valores;
 
@@ -16,12 +15,6 @@ namespace Bib_Hacienda.Clases
         private string identificacion;
         private List<Res> l_reses = new List<Res>();
         private l_tipos_potreros tipo_potrero;
-
-        //Eventos
-        private PublisherPotreroMitad publisher_potrero_mitad = new PublisherPotreroMitad();
-        private PublisherPotreroLleno publisher_potrero_lleno = new PublisherPotreroLleno();
-        private PublisherPesoVenta publisher_peso_venta = new PublisherPesoVenta();
-        private PublisherPesoMin publisher_peso_min = new PublisherPesoMin();
 
         //EventHandler
         internal void EventHandler() { }
@@ -57,12 +50,20 @@ namespace Bib_Hacienda.Clases
         /// sin tilde, porque es un eslabón de la cadena de mensajes anidados que ve el
         /// operario.
         ///
-        /// Las fábricas y la política llegan POR PARÁMETRO, no por constructor: Potrero
-        /// es una entidad con identidad, y el contenedor no la construye. Es el mismo
-        /// criterio que ADR-07 aplica al receptor de eventos.
+        /// Las fábricas, la política y los avisos llegan POR PARÁMETRO, no por
+        /// constructor: Potrero es una entidad con identidad, y el contenedor no la
+        /// construye. Es el mismo criterio que ADR-07 aplica al receptor de eventos.
+        ///
+        /// ══ Observer (P-03, Actividad 2) ═════════════════════════════════════════
+        /// Los cuatro publicadores concretos con <c>new</c> desaparecieron de esta
+        /// clase. <paramref name="avisos"/> es el registro de <see cref="IPublicadorEvento"/>
+        /// que arma la raíz de composición, YA en el orden mitad → lleno → peso mínimo →
+        /// peso de venta: el orden de disparo lo decide quien registra, no este método,
+        /// que se limita a iterar.
         /// </summary>
         public string anadir_res(string nombre, ushort edad, uint peso,
-            PoliticaCapacidadPotrero politica, IReadOnlyCollection<IFabricaRes> fabricas)
+            PoliticaCapacidadPotrero politica, IReadOnlyCollection<IFabricaRes> fabricas,
+            IReadOnlyCollection<IPublicadorEvento> avisos)
         {
             try
             {
@@ -100,12 +101,14 @@ namespace Bib_Hacienda.Clases
                 var eventos = new AcumuladorMensajes();
 
                 // EL ORDEN DE DISPARO ES COMPORTAMIENTO OBSERVABLE: mitad, lleno, peso
-                // mínimo, peso de venta (Potrero.cs:135-138). Nótese que NO es el mismo
-                // orden en que el código original se suscribía, que era irrelevante.
-                publisher_potrero_mitad.Informar_Potrero_Mitad(cantidad_reses, this, eventos);
-                publisher_potrero_lleno.Informar_Potrero_Lleno(cantidad_reses, this, eventos);
-                publisher_peso_min.Informar_Peso_Min(res, eventos);
-                publisher_peso_venta.Informar_Peso_Venta(res, eventos);
+                // mínimo, peso de venta (Potrero.cs:135-138 del Reto 1). Ahora lo fija el
+                // orden de `avisos` (Observer, P-03, Actividad 2), no una secuencia de
+                // llamadas escritas a mano aquí.
+                var contexto = new ContextoAviso { CantidadReses = cantidad_reses, Potrero = this, Res = res };
+                foreach (var aviso in avisos)
+                {
+                    aviso.Informar(contexto, eventos);
+                }
 
                 //Construir mensaje de retorno
                 string mensaje_final = $"La res {nombre} ha sido añadida al potrero {this.identificacion} con exito.";

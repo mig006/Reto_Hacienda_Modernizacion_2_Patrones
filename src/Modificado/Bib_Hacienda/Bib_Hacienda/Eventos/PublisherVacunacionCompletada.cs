@@ -1,12 +1,25 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Valores;
 using System;
 
 namespace Bib_Hacienda.Eventos
 {
-    /// <summary>ADR-07 · Informa si una res completó su esquema de vacunación.</summary>
-    public class PublisherVacunacionCompletada
+    /// <summary>
+    /// ADR-07 · Observer (P-03, Actividad 2) · Informa si una res completó su esquema
+    /// de vacunación.
+    /// </summary>
+    public class PublisherVacunacionCompletada : IPublicadorEvento
     {
+        /// <summary>
+        /// Lee Res y los dos contadores de ContextoAviso; ignora Potrero y CantidadReses.
+        /// Descarta el <c>bool</c> de <see cref="Informar_Vacunacion_Completada"/>: en
+        /// ServicioVacunacion.aplicar_vacuna ya se descartaba, el mensaje viaja por el
+        /// receptor, no por el valor de retorno.
+        /// </summary>
+        public void Informar(ContextoAviso contexto, IReceptorEventos receptor)
+            => Informar_Vacunacion_Completada(contexto.Res, contexto.ContadorBacterianas, contexto.ContadorVivas, receptor);
+
         //Metodo para informar que una res ha completado su esquema de vacunacion
         public bool Informar_Vacunacion_Completada(Res res, ushort contador_bacterianas, ushort contador_vivas, IReceptorEventos receptor)
         {

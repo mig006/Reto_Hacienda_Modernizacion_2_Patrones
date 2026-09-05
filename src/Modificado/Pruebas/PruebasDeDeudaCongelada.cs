@@ -1,6 +1,7 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
 using Bib_Hacienda.Contratos;
+using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
 using Bib_Hacienda.Valores;
@@ -146,15 +147,22 @@ namespace Bib_Hacienda.Pruebas
             var hacienda = new Hacienda();
             var gestorPotreros = new GestorPotreros(hacienda);
 
-            IRepositorioPotreros repoPotreros = new RepositorioPotrerosArchivo(datos, new PoliticaCapacidadPotrero(), Fabricas);
+            var avisosAltaDeRes = new IPublicadorEvento[]
+            {
+                new PublisherPotreroMitad(), new PublisherPotreroLleno(), new PublisherPesoMin(), new PublisherPesoVenta()
+            };
+            IRepositorioPotreros repoPotreros = new RepositorioPotrerosArchivo(datos, new PoliticaCapacidadPotrero(), Fabricas, avisosAltaDeRes);
             IRepositorioVentas repoVentas = new RepositorioVentasArchivo(datos, Fabricas);
             IRepositorioCatalogoVacunas repoCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
 
             var guardado = new GuardadoValidado(repoPotreros, repoVentas, repoCatalogo,
                 new ValidadorPotrero(), new ValidadorRes(), new ValidadorVacuna(), new ValidadorVenta());
 
+            var servicioVacunacion = new ServicioVacunacion(hacienda, gestorPotreros,
+                new PublisherVacunaVencida(), new IPublicadorEvento[] { new PublisherVacunacionCompletada() });
+
             return new VacunaService(hacienda, new FabricaVacunas(hacienda, FabricasVacuna),
-                new ServicioVacunacion(hacienda, gestorPotreros), gestorPotreros, guardado, repoCatalogo);
+                servicioVacunacion, gestorPotreros, guardado, repoCatalogo);
         }
     }
 }
