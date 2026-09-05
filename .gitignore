@@ -4,3 +4,6 @@ Reto_Hacienda_Modernizacion_SOLID/
 # Artefactos de compilación .NET (para cuando entre el código en src/)
 bin/
 obj/
+CLAUDE.md
+
+.vscode/
