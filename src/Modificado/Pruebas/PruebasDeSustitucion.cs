@@ -1,5 +1,6 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
+using Bib_Hacienda.Clases.Validaciones.ReglasRes;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Eventos;
@@ -44,17 +45,72 @@ namespace Bib_Hacienda.Pruebas
 
             // Entradas válidas
             Assert.True(new ValidadorPotrero().Validar(potrero).EsValido);
-            Assert.True(new ValidadorRes().Validar(res).EsValido);
+            Assert.True(CrearValidadorRes().Validar(res).EsValido);
             Assert.True(new ValidadorVacuna().Validar(vacuna).EsValido);
             Assert.True(new ValidadorVenta().Validar(venta).EsValido);
             Assert.True(new ValidadorChip().Validar(chip).EsValido);
 
             // Entradas inválidas: devuelven, NO lanzan
             Assert.False(new ValidadorPotrero().Validar(null).EsValido);
-            Assert.False(new ValidadorRes().Validar(null).EsValido);
+            Assert.False(CrearValidadorRes().Validar(null).EsValido);
             Assert.False(new ValidadorVacuna().Validar(null).EsValido);
             Assert.False(new ValidadorVenta().Validar(null).EsValido);
             Assert.False(new ValidadorChip().Validar(null).EsValido);
+        }
+
+        /// <summary>Mismo registro que RaizComposicion: no nula primero (Composite, P-05).</summary>
+        private static ValidadorCompuesto<Res> CrearValidadorRes() => new(new IValidador<Res>[]
+        {
+            new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva(),
+        });
+
+        // ══ Composite (Actividad 2 · P-05) · ValidadorCompuesto<T> ═══════════════
+
+        /// <summary>Regla de prueba que cuenta cuántas veces se evaluó, sin fallar nunca.</summary>
+        private sealed class ReglaQueCuenta : IValidador<Res>
+        {
+            public int Evaluaciones { get; private set; }
+            public ResultadoValidacion Validar(Res res)
+            {
+                Evaluaciones++;
+                return ResultadoValidacion.Valido();
+            }
+        }
+
+        /// <summary>Regla de prueba que siempre falla.</summary>
+        private sealed class ReglaQueSiempreFalla : IValidador<Res>
+        {
+            public ResultadoValidacion Validar(Res res) => ResultadoValidacion.Invalido();
+        }
+
+        /// <summary>
+        /// El corte en la primera regla inválida no es solo el resultado correcto: las
+        /// reglas posteriores NI SIQUIERA SE EVALÚAN. Es la propiedad que permite que
+        /// ReglaNombreObligatorio, ReglaPesoPositivo y ReglaEdadPositiva asuman una res
+        /// no nula sin comprobarlo cada una.
+        /// </summary>
+        [Fact]
+        public void ValidadorCompuestoCortaEnLaPrimeraReglaInvalidaSinEvaluarLasSiguientes()
+        {
+            var siguiente = new ReglaQueCuenta();
+            var compuesto = new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ReglaQueSiempreFalla(), siguiente });
+
+            var resultado = compuesto.Validar(new Ternero("Pinta", 100, 6));
+
+            Assert.False(resultado.EsValido);
+            Assert.Equal(0, siguiente.Evaluaciones);
+        }
+
+        /// <summary>
+        /// Con las cuatro reglas reales, en el orden real, pasar null no lanza: es la
+        /// prueba de sustitución de que ReglaResNoNula PRIMERO es lo que hace seguras a
+        /// las otras tres, no una casualidad del orden en que se escribieron los archivos.
+        /// </summary>
+        [Fact]
+        public void ElOrdenDeLasCuatroReglasDeResEvitaNullReferenceException()
+        {
+            var resultado = CrearValidadorRes().Validar(null);
+            Assert.False(resultado.EsValido);
         }
 
         [Fact]

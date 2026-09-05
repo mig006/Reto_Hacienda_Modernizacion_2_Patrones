@@ -1,5 +1,6 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
+using Bib_Hacienda.Clases.Validaciones.ReglasRes;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Eventos;
@@ -85,9 +86,15 @@ namespace Caracterizacion.Rediseno
             _repositorioCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
             _repositorioUsuarios = new RepositorioUsuariosArchivo(datos);
 
+            // Composite (P-05, Actividad 2) · mismo registro que RaizComposicion.
+            var validadorRes = new ValidadorCompuesto<Res>(new IValidador<Res>[]
+            {
+                new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva(),
+            });
+
             _guardado = new GuardadoValidado(
                 _repositorioPotreros, _repositorioVentas, _repositorioCatalogo,
-                new ValidadorPotrero(), new ValidadorRes(), new ValidadorVacuna(), new ValidadorVenta());
+                new ValidadorPotrero(), validadorRes, new ValidadorVacuna(), new ValidadorVenta());
 
             _hacienda = new Hacienda();
 

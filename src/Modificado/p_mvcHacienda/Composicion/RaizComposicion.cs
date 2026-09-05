@@ -1,5 +1,6 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
+using Bib_Hacienda.Clases.Validaciones.ReglasRes;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Eventos;
@@ -79,7 +80,22 @@ namespace p_mvcHacienda.Composicion
             // PersistenciaService. Ese es el costo aceptado de ADR-03.
             // Singleton porque no tienen estado y son deterministas.
             builder.Services.AddSingleton<IValidador<Potrero>, ValidadorPotrero>();
-            builder.Services.AddSingleton<IValidador<Res>, ValidadorRes>();
+
+            // ── Composite (ADR-16, P-05, Actividad 2) ───────────────────────────────
+            //
+            // El `if` de cuatro condiciones que tenía ValidarRes se partió en cuatro
+            // reglas (ReglasRes/), agrupadas aquí en el mismo orden en que las evaluaba
+            // el `||` original: no nula primero, porque las otras tres asumen que ya lo
+            // es. Una quinta regla (por ejemplo, para SC-3) es una clase más y una línea
+            // más en este arreglo — no una condición más en un `if` que ya tenía cuatro.
+            builder.Services.AddSingleton<IValidador<Res>>(_ => new ValidadorCompuesto<Res>(new IValidador<Res>[]
+            {
+                new ReglaResNoNula(),
+                new ReglaNombreObligatorio(),
+                new ReglaPesoPositivo(),
+                new ReglaEdadPositiva(),
+            }));
+
             builder.Services.AddSingleton<IValidador<Vacuna>, ValidadorVacuna>();
             builder.Services.AddSingleton<IValidador<Venta>, ValidadorVenta>();
 
