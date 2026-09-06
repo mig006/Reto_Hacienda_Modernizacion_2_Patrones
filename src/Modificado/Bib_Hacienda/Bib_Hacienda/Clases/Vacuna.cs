@@ -26,9 +26,9 @@ namespace Bib_Hacienda.Clases
         }
 
         //Accesores
-        public string Nombre { get => nombre; set => nombre = value; }
-        public string Lote { get => lote; set => lote = value; }
-        public DateTime Fecha_vencimiento { get => fecha_vencimiento; set => fecha_vencimiento = value; }
-        public DateTime Fecha_aplicacion { get => fecha_aplicacion; set => fecha_aplicacion = value; }
+        public string Nombre { get => nombre; private set => nombre = value; }
+        public string Lote { get => lote; private set => lote = value; }
+        public DateTime Fecha_vencimiento { get => fecha_vencimiento; private set => fecha_vencimiento = value; }
+        public DateTime Fecha_aplicacion { get => fecha_aplicacion; private set => fecha_aplicacion = value; }
     }
 }

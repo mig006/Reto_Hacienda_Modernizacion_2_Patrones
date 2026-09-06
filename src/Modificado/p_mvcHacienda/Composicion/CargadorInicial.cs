@@ -36,7 +36,7 @@ namespace p_mvcHacienda.Composicion
                 var potreros = repositorioPotreros.CargarPotreros();
                 foreach (var potrero in potreros)
                 {
-                    hacienda.L_potreros.Add(potrero);
+                    hacienda.AgregarPotrero(potrero);
                 }
 
                 // Cargar reses en los potreros
@@ -48,13 +48,13 @@ namespace p_mvcHacienda.Composicion
                 var ventas = repositorioVentas.CargarVentas(hacienda.L_potreros);
                 foreach (var venta in ventas)
                 {
-                    hacienda.L_ventas.Add(venta);
+                    hacienda.RegistrarVenta(venta);
                 }
 
                 var vacunas = repositorioCatalogo.CargarVacunas();
                 foreach (var vacuna in vacunas)
                 {
-                    hacienda.L_vacunas.Add(vacuna);
+                    hacienda.AgregarVacuna(vacuna);
                 }
 
                 Console.WriteLine($"Datos cargados: {potreros.Count} potreros, {ventas.Count} ventas, {vacunas.Count} vacunas");

@@ -17,7 +17,10 @@ namespace Bib_Hacienda.Clases
             this.Contrasena = contrasena;
         }
 
-        public string Nombre { get => nombre; set => nombre = value; }
-        public string Contrasena { get => contrasena; set => contrasena = value; }
+        public string Nombre { get => nombre; private set => nombre = value; }
+        // Getter conservado SOLO para la persistencia (RepositorioUsuariosArchivo escribe
+        // "Nombre|Contrasena", formato de archivo congelado). Sin setter público: el usuario
+        // es inmutable tras construirse.
+        public string Contrasena { get => contrasena; private set => contrasena = value; }
     }
 }

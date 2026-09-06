@@ -66,7 +66,7 @@ namespace p_mvcHacienda.Servicios
 
         // ── Guardados ─────────────────────────────────────────────────────
 
-        public ResultadoValidacion? GuardarPotreros(List<Potrero> potreros)
+        public ResultadoValidacion? GuardarPotreros(IReadOnlyList<Potrero> potreros)
         {
             ResultadoValidacion? ultima = null;
             foreach (var potrero in potreros)
@@ -79,7 +79,7 @@ namespace p_mvcHacienda.Servicios
             return ultima;
         }
 
-        public ResultadoValidacion? GuardarReses(List<Potrero> potreros)
+        public ResultadoValidacion? GuardarReses(IReadOnlyList<Potrero> potreros)
         {
             ResultadoValidacion? ultima = null;
             foreach (var potrero in potreros)
@@ -100,7 +100,7 @@ namespace p_mvcHacienda.Servicios
         /// es el que fija PersistenciaService.cs:230-260, y determina cuál es el último
         /// resultado registrado cuando todo valida.
         /// </summary>
-        public ResultadoValidacion? GuardarVacunasAplicadas(List<Potrero> potreros)
+        public ResultadoValidacion? GuardarVacunasAplicadas(IReadOnlyList<Potrero> potreros)
         {
             ResultadoValidacion? ultima = null;
             foreach (var potrero in potreros)
@@ -122,7 +122,7 @@ namespace p_mvcHacienda.Servicios
             return ultima;
         }
 
-        public ResultadoValidacion? GuardarVacunas(List<Vacuna> vacunas)
+        public ResultadoValidacion? GuardarVacunas(IReadOnlyList<Vacuna> vacunas)
         {
             ResultadoValidacion? ultima = null;
             foreach (var vacuna in vacunas)
@@ -135,7 +135,7 @@ namespace p_mvcHacienda.Servicios
             return ultima;
         }
 
-        public ResultadoValidacion? GuardarVentas(List<Venta> ventas)
+        public ResultadoValidacion? GuardarVentas(IReadOnlyList<Venta> ventas)
         {
             ResultadoValidacion? ultima = null;
             foreach (var venta in ventas)

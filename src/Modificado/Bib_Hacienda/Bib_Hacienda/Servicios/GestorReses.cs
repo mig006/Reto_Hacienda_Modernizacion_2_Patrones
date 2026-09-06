@@ -74,7 +74,7 @@ namespace Bib_Hacienda.Servicios
                 if (res == null) throw new ArgumentNullException(nameof(res));
 
                 //Alimentar la res (incrementa el peso)
-                res.Peso ++;
+                res.Alimentar();
 
                 // ADR-07 · Dos suscripciones por llamada que nunca se deshacían.
                 var eventos = new AcumuladorMensajes();
@@ -187,7 +187,7 @@ namespace Bib_Hacienda.Servicios
                 if (potrero == null) throw new ArgumentNullException(nameof(potrero));
                 if (res == null) throw new ArgumentNullException(nameof(res));
 
-                res.Peso += cantidadAlimento;
+                res.Alimentar(cantidadAlimento);
 
                 // ADR-07 · Dos suscripciones por llamada que nunca se deshacían. En una
                 // jornada de 200 alimentaciones había 400 manejadores vivos.

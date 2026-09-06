@@ -25,7 +25,7 @@ namespace p_mvcHacienda.Infraestructura
 
         private string Ruta(string archivo) => Path.Combine(_directorioArchivos, archivo);
 
-        public List<Venta> CargarVentas(List<Potrero> potreros)
+        public List<Venta> CargarVentas(IReadOnlyList<Potrero> potreros)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace p_mvcHacienda.Infraestructura
             }
         }
 
-        public void GuardarVentas(List<Venta> ventas)
+        public void GuardarVentas(IReadOnlyList<Venta> ventas)
         {
             try
             {

@@ -15,8 +15,8 @@ namespace Bib_Hacienda.Contratos
     /// </summary>
     public interface IRepositorioVentas
     {
-        List<Venta> CargarVentas(List<Potrero> potreros);
+        List<Venta> CargarVentas(IReadOnlyList<Potrero> potreros);
 
-        void GuardarVentas(List<Venta> ventas);
+        void GuardarVentas(IReadOnlyList<Venta> ventas);
     }
 }

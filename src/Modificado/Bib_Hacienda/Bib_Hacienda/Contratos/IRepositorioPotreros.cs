@@ -27,15 +27,15 @@ namespace Bib_Hacienda.Contratos
         List<Potrero> CargarPotreros();
 
         /// <summary>Rehidrata las reses dentro de los potreros recibidos.</summary>
-        void CargarReses(List<Potrero> potreros);
+        void CargarReses(IReadOnlyList<Potrero> potreros);
 
         /// <summary>Rehidrata las vacunas aplicadas dentro de las reses de esos potreros.</summary>
-        void CargarVacunasAplicadas(List<Potrero> potreros);
+        void CargarVacunasAplicadas(IReadOnlyList<Potrero> potreros);
 
-        void GuardarPotreros(List<Potrero> potreros);
+        void GuardarPotreros(IReadOnlyList<Potrero> potreros);
 
-        void GuardarReses(List<Potrero> potreros);
+        void GuardarReses(IReadOnlyList<Potrero> potreros);
 
-        void GuardarVacunasAplicadas(List<Potrero> potreros);
+        void GuardarVacunasAplicadas(IReadOnlyList<Potrero> potreros);
     }
 }

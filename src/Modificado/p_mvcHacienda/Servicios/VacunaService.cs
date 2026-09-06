@@ -88,7 +88,7 @@ namespace p_mvcHacienda.Servicios
                 if (_hacienda.L_vacunas.Count ==0)
                 {
                     var cargadas = _catalogo.CargarVacunas();
-                    foreach (var v in cargadas) _hacienda.L_vacunas.Add(v);
+                    foreach (var v in cargadas) _hacienda.AgregarVacuna(v);
                 }
 
                 // Buscar la vacuna por su lote
@@ -105,7 +105,7 @@ namespace p_mvcHacienda.Servicios
                 var existente = _hacienda.L_vacunas.FirstOrDefault(v => v.Lote == loteVacuna);
                 if (existente != null)
                 {
-                    _hacienda.L_vacunas.Remove(existente);
+                    _hacienda.RemoverVacuna(existente);
                 }
 
                 // Persistir cambios.
@@ -149,7 +149,7 @@ namespace p_mvcHacienda.Servicios
             if (_hacienda.L_vacunas.Count ==0)
             {
                 var cargadas = _catalogo.CargarVacunas();
-                foreach (var v in cargadas) _hacienda.L_vacunas.Add(v);
+                foreach (var v in cargadas) _hacienda.AgregarVacuna(v);
             }
             return _hacienda.L_vacunas.OrderBy(v => v.Nombre).ToList();
         }
@@ -162,7 +162,7 @@ namespace p_mvcHacienda.Servicios
                 // Buscar el potrero por su identificación
                 var potrero = _gestorPotreros.buscar_potrero(potreroId);
                 var res = potrero.buscar_res(nombreRes);
-                return res.L_vacunas_aplicadas;
+                return res.L_vacunas_aplicadas.ToList();
             }
             catch
             {
@@ -177,7 +177,7 @@ namespace p_mvcHacienda.Servicios
             if (_hacienda.L_vacunas.Count ==0)
             {
                 var cargadas = _catalogo.CargarVacunas();
-                foreach (var v in cargadas) _hacienda.L_vacunas.Add(v);
+                foreach (var v in cargadas) _hacienda.AgregarVacuna(v);
             }
 
             var vacunas = _hacienda.L_vacunas;

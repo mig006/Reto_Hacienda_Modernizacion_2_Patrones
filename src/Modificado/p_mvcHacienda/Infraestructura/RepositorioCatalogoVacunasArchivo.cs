@@ -47,7 +47,7 @@ namespace p_mvcHacienda.Infraestructura
             }
         }
 
-        public void GuardarVacunas(List<Vacuna> vacunas)
+        public void GuardarVacunas(IReadOnlyList<Vacuna> vacunas)
         {
             try
             {

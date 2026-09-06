@@ -21,7 +21,7 @@ namespace Bib_Hacienda.Clases
 
         //Accesores
         public uint Periodo_aplicacion { get => periodo_aplicacion;
-            set => periodo_aplicacion = value>=ReglaVacuna.periodo_min_bac_aplic && value<=ReglaVacuna.periodo_max_bac_aplic? value :
+            private set => periodo_aplicacion = value>=ReglaVacuna.periodo_min_bac_aplic && value<=ReglaVacuna.periodo_max_bac_aplic? value :
                 throw new Exception($"el valor del periodo de aplicacion debe estar entre {ReglaVacuna.periodo_min_bac_aplic} y {ReglaVacuna.periodo_max_bac_aplic} semanas"); }
     }
 }

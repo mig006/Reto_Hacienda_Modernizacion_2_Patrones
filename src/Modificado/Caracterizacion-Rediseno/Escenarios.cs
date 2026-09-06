@@ -5,6 +5,7 @@ using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Fabricas;
 using Bib_Hacienda.Servicios;
+using Bib_Hacienda.Valores;
 using p_mvcHacienda.Infraestructura;
 using p_mvcHacienda.Servicios;
 using System.Reflection;
@@ -87,7 +88,10 @@ namespace Caracterizacion.Rediseno
 
             _guardado = new GuardadoValidado(
                 _repositorioPotreros, _repositorioVentas, _repositorioCatalogo,
-                new ValidadorPotrero(), new ValidadorRes(), new ValidadorVacuna(), new ValidadorVenta());
+                new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }),
+                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }),
+                new ValidadorCompuesto<Vacuna>(new IValidador<Vacuna>[] { new ValidadorVacuna() }),
+                new ValidadorCompuesto<Venta>(new IValidador<Venta>[] { new ValidadorVenta() }));
 
             _hacienda = new Hacienda();
 
@@ -99,7 +103,7 @@ namespace Caracterizacion.Rediseno
             var servicioVacunacion = new ServicioVacunacion(_hacienda, gestorPotreros, publisherVacunaVencida, avisosVacunacion);
 
             _potreroService = new PotreroService(_hacienda, gestorPotreros, gestorReses, _guardado);
-            _resService = new ResService(_hacienda, gestorPotreros, gestorReses, servicioVenta, _guardado, new ValidadorChip());
+            _resService = new ResService(_hacienda, gestorPotreros, gestorReses, servicioVenta, _guardado, new ValidadorCompuesto<Chip>(new IValidador<Chip>[] { new ValidadorChip() }));
             _vacunaService = new VacunaService(_hacienda, _fabricaVacunas, servicioVacunacion, gestorPotreros, _guardado, _repositorioCatalogo);
             _ventaService = new VentaService(_hacienda, servicioVenta, _guardado);
             _usuarioService = new UsuarioService(_repositorioUsuarios);
@@ -126,16 +130,16 @@ namespace Caracterizacion.Rediseno
             try
             {
                 var potreros = _repositorioPotreros.CargarPotreros();
-                foreach (var potrero in potreros) _hacienda.L_potreros.Add(potrero);
+                foreach (var potrero in potreros) _hacienda.AgregarPotrero(potrero);
 
                 _repositorioPotreros.CargarReses(_hacienda.L_potreros);
                 _repositorioPotreros.CargarVacunasAplicadas(_hacienda.L_potreros);
 
                 var ventas = _repositorioVentas.CargarVentas(_hacienda.L_potreros);
-                foreach (var venta in ventas) _hacienda.L_ventas.Add(venta);
+                foreach (var venta in ventas) _hacienda.RegistrarVenta(venta);
 
                 var vacunas = _repositorioCatalogo.CargarVacunas();
-                foreach (var vacuna in vacunas) _hacienda.L_vacunas.Add(vacuna);
+                foreach (var vacuna in vacunas) _hacienda.AgregarVacuna(vacuna);
 
                 _r.Campo("consola", $"Datos cargados: {potreros.Count} potreros, {ventas.Count} ventas, {vacunas.Count} vacunas");
             }
@@ -424,13 +428,13 @@ namespace Caracterizacion.Rediseno
             try
             {
                 var potreros = _repositorioPotreros.CargarPotreros();
-                foreach (var potrero in potreros) _hacienda.L_potreros.Add(potrero);
+                foreach (var potrero in potreros) _hacienda.AgregarPotrero(potrero);
                 _repositorioPotreros.CargarReses(_hacienda.L_potreros);
                 _repositorioPotreros.CargarVacunasAplicadas(_hacienda.L_potreros);
                 var ventas = _repositorioVentas.CargarVentas(_hacienda.L_potreros);
-                foreach (var venta in ventas) _hacienda.L_ventas.Add(venta);
+                foreach (var venta in ventas) _hacienda.RegistrarVenta(venta);
                 var vacunas = _repositorioCatalogo.CargarVacunas();
-                foreach (var vacuna in vacunas) _hacienda.L_vacunas.Add(vacuna);
+                foreach (var vacuna in vacunas) _hacienda.AgregarVacuna(vacuna);
                 _r.Campo("consola", $"Datos cargados: {potreros.Count} potreros, {ventas.Count} ventas, {vacunas.Count} vacunas");
             }
             catch (Exception ex)

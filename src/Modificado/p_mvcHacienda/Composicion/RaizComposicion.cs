@@ -78,16 +78,27 @@ namespace p_mvcHacienda.Composicion
             // Antes eran cuatro proxies de Castle creados perezosamente dentro de
             // PersistenciaService. Ese es el costo aceptado de ADR-03.
             // Singleton porque no tienen estado y son deterministas.
-            builder.Services.AddSingleton<IValidador<Potrero>, ValidadorPotrero>();
-            builder.Services.AddSingleton<IValidador<Res>, ValidadorRes>();
-            builder.Services.AddSingleton<IValidador<Vacuna>, ValidadorVacuna>();
-            builder.Services.AddSingleton<IValidador<Venta>, ValidadorVenta>();
+            // Composite (P-05) · Cada IValidador<T> se resuelve como un ValidadorCompuesto<T>
+            // que AGRUPA las reglas de ese tipo y corta en la primera que falla. Hoy cada
+            // compuesto envuelve su validador existente —cuyo if NO se toca (ValidarRes.cs:19)—;
+            // una regla nueva pasa a ser una clase más añadida a esta lista, sin modificar
+            // código existente (OCP). Esta raíz es el único lugar donde se lee cómo se compuso
+            // una validación. GuardadoValidado sigue dependiendo de IValidador<T> (DIP intacto).
+            builder.Services.AddSingleton<IValidador<Potrero>>(_ =>
+                new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }));
+            builder.Services.AddSingleton<IValidador<Res>>(_ =>
+                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }));
+            builder.Services.AddSingleton<IValidador<Vacuna>>(_ =>
+                new ValidadorCompuesto<Vacuna>(new IValidador<Vacuna>[] { new ValidadorVacuna() }));
+            builder.Services.AddSingleton<IValidador<Venta>>(_ =>
+                new ValidadorCompuesto<Venta>(new IValidador<Venta>[] { new ValidadorVenta() }));
 
             // SC-2 · Se AGREGA una línea; los cuatro de arriba NO se tocan. Con la
             // jerarquía Validacion original, declarar esta validación habría costado seis
             // archivos y habría añadido cuatro excepciones a clases que no tienen nada que
             // ver con el chip. Es la deuda que pagó ADR-03, cobrada aquí.
-            builder.Services.AddSingleton<IValidador<Chip>, ValidadorChip>();
+            builder.Services.AddSingleton<IValidador<Chip>>(_ =>
+                new ValidadorCompuesto<Chip>(new IValidador<Chip>[] { new ValidadorChip() }));
 
             // ── Fábricas de res · ÚNICO punto a tocar al agregar un tipo de res ──
             //

@@ -166,9 +166,20 @@ namespace Bib_Hacienda.Clases
         }
 
         //Accesores
-        public List<Res> L_reses { get => l_reses; set => l_reses = value; }
-        public string Identificacion { get => identificacion; set => identificacion = value; }
-        public l_tipos_potreros Tipo_potrero { get => tipo_potrero; set => tipo_potrero = value; }
+        /// <summary>
+        /// Vista de SOLO LECTURA de las reses del potrero. El alta se hace por
+        /// <see cref="anadir_res"/> y la baja por <see cref="RetirarRes"/>; nadie muta la
+        /// colección desde fuera.
+        /// </summary>
+        public IReadOnlyList<Res> L_reses => l_reses;
+        public string Identificacion { get => identificacion; private set => identificacion = value; }
+        public l_tipos_potreros Tipo_potrero { get => tipo_potrero; private set => tipo_potrero = value; }
+
+        /// <summary>
+        /// Retira una res del potrero (baja de inventario). Sustituye a la mutación externa
+        /// `potrero.L_reses.Remove(res)` que hacía EfectoVentaRetiroInventario.
+        /// </summary>
+        public void RetirarRes(Res res) => l_reses.Remove(res);
 
     }
 }

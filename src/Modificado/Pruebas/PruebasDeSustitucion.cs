@@ -90,7 +90,7 @@ namespace Bib_Hacienda.Pruebas
 
             for (int i = 0; i < 200; i++)
             {
-                res.Peso += 1;
+                res.Alimentar(1);
             }
 
             Assert.Equal(pesoInicial + 200, res.Peso);
@@ -402,9 +402,10 @@ namespace Bib_Hacienda.Pruebas
         {
             var hacienda = new Hacienda();
             var potrero = new Potrero("P", l_tipos_potreros.cebon);
-            var res = new Cebon("C", 200, 20);
-            potrero.L_reses.Add(res);
-            hacienda.L_potreros.Add(potrero);
+            potrero.anadir_res("C", 20, 200, new PoliticaCapacidadPotrero(),
+                new IFabricaRes[] { new FabricaCebon() }, System.Array.Empty<IPublicadorEvento>());
+            var res = potrero.buscar_res("C");
+            hacienda.AgregarPotrero(potrero);
 
             new EfectoVentaRetiroInventario().Aplicar(hacienda, potrero, res);
             new EfectoVentaSinEfecto().Aplicar(hacienda, potrero, new ProductoDerivado(TipoProducto.Carne, 10));

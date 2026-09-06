@@ -45,24 +45,17 @@ namespace Bib_Hacienda.Clases
         private List<Venta> l_ventas;
         private List<Vacuna> l_vacunas;
 
-        //Accesores públicos para los servicios (get público, set privado)
-        public List<Potrero> L_potreros
-        {
-            get => l_potreros;
-            private set => l_potreros = value;
-        }
+        // Vistas de SOLO LECTURA. La raíz de agregados es la ÚNICA que muta sus
+        // colecciones, a través de sus métodos de comportamiento. Antes exponía las List
+        // mutables y los servicios hacían .Add/.Remove desde fuera.
+        public IReadOnlyList<Potrero> L_potreros => l_potreros;
+        public IReadOnlyList<Venta> L_ventas => l_ventas;
+        public IReadOnlyList<Vacuna> L_vacunas => l_vacunas;
 
-        public List<Venta> L_ventas
-        {
-            get => l_ventas;
-            private set => l_ventas = value;
-        }
-
-        public List<Vacuna> L_vacunas
-        {
-            get => l_vacunas;
-            private set => l_vacunas = value;
-        }
+        public void AgregarPotrero(Potrero potrero) => l_potreros.Add(potrero);
+        public void RegistrarVenta(Venta venta) => l_ventas.Add(venta);
+        public void AgregarVacuna(Vacuna vacuna) => l_vacunas.Add(vacuna);
+        public void RemoverVacuna(Vacuna vacuna) => l_vacunas.Remove(vacuna);
 
         //Constructor vacío
         public Hacienda()

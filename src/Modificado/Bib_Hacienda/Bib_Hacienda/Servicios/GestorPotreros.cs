@@ -41,7 +41,7 @@ namespace Bib_Hacienda.Servicios
 
                 Potrero nuevo_potrero = new Potrero(indentificacion, tipo_potrero);
 
-                _hacienda.L_potreros.Add(nuevo_potrero);
+                _hacienda.AgregarPotrero(nuevo_potrero);
 
                 return ($"El potrero {indentificacion} se a añadido a la hacienda. ");
 

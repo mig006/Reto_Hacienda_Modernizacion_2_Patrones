@@ -79,7 +79,7 @@ namespace p_mvcHacienda.Infraestructura
             }
         }
 
-        public void CargarReses(List<Potrero> potreros)
+        public void CargarReses(IReadOnlyList<Potrero> potreros)
         {
             try
             {
@@ -113,7 +113,7 @@ namespace p_mvcHacienda.Infraestructura
             }
         }
 
-        public void CargarVacunasAplicadas(List<Potrero> potreros)
+        public void CargarVacunasAplicadas(IReadOnlyList<Potrero> potreros)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace p_mvcHacienda.Infraestructura
                         var res = potrero.buscar_res(nombreRes);
                         if (res != null)
                         {
-                            res.L_vacunas_aplicadas.Add(vacuna);
+                            res.RegistrarVacunaAplicada(vacuna);
                         }
                     }
                 }
@@ -148,7 +148,7 @@ namespace p_mvcHacienda.Infraestructura
         // conserva el corte temprano de PersistenciaService.cs:110-114, donde una sola
         // res inválida impedía escribir Reses.txt entero.
 
-        public void GuardarPotreros(List<Potrero> potreros)
+        public void GuardarPotreros(IReadOnlyList<Potrero> potreros)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace p_mvcHacienda.Infraestructura
             }
         }
 
-        public void GuardarReses(List<Potrero> potreros)
+        public void GuardarReses(IReadOnlyList<Potrero> potreros)
         {
             try
             {
@@ -181,7 +181,7 @@ namespace p_mvcHacienda.Infraestructura
             }
         }
 
-        public void GuardarVacunasAplicadas(List<Potrero> potreros)
+        public void GuardarVacunasAplicadas(IReadOnlyList<Potrero> potreros)
         {
             try
             {

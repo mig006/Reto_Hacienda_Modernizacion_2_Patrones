@@ -61,7 +61,7 @@ namespace p_mvcHacienda.Infraestructura
             throw new System.ArgumentException($"Tipo de artículo vendible no soportado: {articulo.GetType().Name}");
         }
 
-        public static bool TryDeLinea(string linea, List<Potrero> potreros,
+        public static bool TryDeLinea(string linea, IReadOnlyList<Potrero> potreros,
             IEnumerable<IFabricaRes> fabricas, out Venta venta)
         {
             venta = null!;

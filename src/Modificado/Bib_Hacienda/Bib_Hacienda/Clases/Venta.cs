@@ -25,9 +25,9 @@ namespace Bib_Hacienda.Clases
         }
 
         //Accesores
-        public Potrero Potrero { get => potrero; set => potrero = value; }
-        public DateTime Fecha { get => fecha; set => fecha = value; }
-        public IArticuloVendible Articulo { get => articulo; set => articulo = value; }
-        public uint Monto { get => monto; set => monto = value; }
+        public Potrero Potrero { get => potrero; private set => potrero = value; }
+        public DateTime Fecha { get => fecha; private set => fecha = value; }
+        public IArticuloVendible Articulo { get => articulo; private set => articulo = value; }
+        public uint Monto { get => monto; private set => monto = value; }
     }
 }

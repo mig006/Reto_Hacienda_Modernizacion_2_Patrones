@@ -75,7 +75,7 @@ namespace Bib_Hacienda.Servicios
                     periodo_aplicacion, grado_atenuacion);
 
                 Vacuna nueva_vacuna = fabrica.Crear(solicitud);
-                _hacienda.L_vacunas.Add(nueva_vacuna);
+                _hacienda.AgregarVacuna(nueva_vacuna);
 
                 return fabrica.MensajeIndividual(solicitud);
             }
@@ -162,7 +162,7 @@ namespace Bib_Hacienda.Servicios
                     continue;
                 }
 
-                _hacienda.L_vacunas.Add(fabrica.Crear(solicitudBase.ConLote(lote_numerado)));
+                _hacienda.AgregarVacuna(fabrica.Crear(solicitudBase.ConLote(lote_numerado)));
                 vacunas_creadas++;
             }
 

@@ -55,7 +55,7 @@ namespace Bib_Hacienda.Servicios
                 //Crear la venta
                 Venta venta = new Venta(potrero, DateTime.Now, res, monto);
                 //Agregar la venta a la lista de ventas
-                _hacienda.L_ventas.Add(venta);
+                _hacienda.RegistrarVenta(venta);
                 //Aplicar el efecto de la venta sobre el inventario (Strategy · P-02)
                 AplicarEfecto(potrero, res);
                 return $"Venta de la res {res.Nombre} realizada con exito";
@@ -82,7 +82,7 @@ namespace Bib_Hacienda.Servicios
                 if (producto == null) throw new ArgumentNullException(nameof(producto));
 
                 Venta venta = new Venta(potrero, DateTime.Now, producto, monto);
-                _hacienda.L_ventas.Add(venta);
+                _hacienda.RegistrarVenta(venta);
                 AplicarEfecto(potrero, producto);
                 return $"Venta de {producto.Cantidad} unidad(es) de {producto.Nombre} realizada con éxito";
             }

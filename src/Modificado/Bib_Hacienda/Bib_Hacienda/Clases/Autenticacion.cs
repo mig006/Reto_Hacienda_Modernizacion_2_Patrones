@@ -14,7 +14,10 @@ namespace Bib_Hacienda.Clases
         private List<Usuario> usuarios_registrados;
 
         //Accesor lista de usuarios
-        public List<Usuario> Usuarios_registrados { get => usuarios_registrados; set => usuarios_registrados = value; }
+        // Encapsulada: sin usos externos. El estado de usuarios se opera con los métodos
+        // de esta clase (crear_usuario / listar_usuarios que devuelve copia). Antes era una
+        // List pública con setter, que permitía reemplazar toda la lista desde fuera.
+        private List<Usuario> Usuarios_registrados { get => usuarios_registrados; set => usuarios_registrados = value; }
 
         public Autenticacion()
         {

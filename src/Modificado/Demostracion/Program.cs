@@ -96,7 +96,10 @@ namespace Demostracion
             IRepositorioUsuarios repoUsuarios = new RepositorioUsuariosArchivo(datos);
 
             var guardado = new GuardadoValidado(repoPotreros, repoVentas, repoCatalogo,
-                new ValidadorPotrero(), new ValidadorRes(), new ValidadorVacuna(), new ValidadorVenta());
+                new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }),
+                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }),
+                new ValidadorCompuesto<Vacuna>(new IValidador<Vacuna>[] { new ValidadorVacuna() }),
+                new ValidadorCompuesto<Venta>(new IValidador<Venta>[] { new ValidadorVenta() }));
 
             // Dominio: la raíz de agregados y los cinco servicios en que se partió Hacienda.
             var hacienda = new Hacienda();
@@ -111,7 +114,7 @@ namespace Demostracion
             // SC-2 · La solicitud de cambio implementada en el Reto 1. Para enchufarla NO
             // hubo que modificar ninguna línea anterior de este método: solo pasar un
             // validador más.
-            _reses = new ResService(hacienda, gestorPotreros, gestorReses, servicioVenta, guardado, new ValidadorChip());
+            _reses = new ResService(hacienda, gestorPotreros, gestorReses, servicioVenta, guardado, new ValidadorCompuesto<Chip>(new IValidador<Chip>[] { new ValidadorChip() }));
             _vacunas = new VacunaService(hacienda, _fabricaVacunas, servicioVacunacion, gestorPotreros, guardado, repoCatalogo);
             // SC-1 · La solicitud de cambio del Reto 2: VentaService gana las dos
             // dependencias que necesita para vender un producto derivado (Strategy P-02).

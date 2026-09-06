@@ -111,8 +111,8 @@ namespace Bib_Hacienda.Servicios
                 }
                 else
                 {
-                    res.L_vacunas_aplicadas.Add(vacuna);
-                    _hacienda.L_vacunas.Remove(vacuna);
+                    res.RegistrarVacunaAplicada(vacuna);
+                    _hacienda.RemoverVacuna(vacuna);
 
                     //Actualizar contadores
                     if (vacuna is Bacteriana)

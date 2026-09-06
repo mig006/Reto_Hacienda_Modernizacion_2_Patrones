@@ -156,7 +156,10 @@ namespace Bib_Hacienda.Pruebas
             IRepositorioCatalogoVacunas repoCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
 
             var guardado = new GuardadoValidado(repoPotreros, repoVentas, repoCatalogo,
-                new ValidadorPotrero(), new ValidadorRes(), new ValidadorVacuna(), new ValidadorVenta());
+                new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }),
+                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }),
+                new ValidadorCompuesto<Vacuna>(new IValidador<Vacuna>[] { new ValidadorVacuna() }),
+                new ValidadorCompuesto<Venta>(new IValidador<Venta>[] { new ValidadorVenta() }));
 
             var servicioVacunacion = new ServicioVacunacion(hacienda, gestorPotreros,
                 new PublisherVacunaVencida(), new IPublicadorEvento[] { new PublisherVacunacionCompletada() });

@@ -85,7 +85,16 @@ namespace Bib_Hacienda.Clases
         /// <summary>Inmutable: es la invariante que sostiene la sustituibilidad.</summary>
         public ushort Edad => edad;
 
-        public List<Vacuna> L_vacunas_aplicadas { get => l_vacunas_aplicadas; set => l_vacunas_aplicadas = value; }
+        /// <summary>
+        /// Vista de SOLO LECTURA del esquema aplicado. La colección interna se muta
+        /// únicamente desde el propio animal (encapsulamiento): ver
+        /// <see cref="RegistrarVacunaAplicada"/>. Antes se exponía la `List` mutable y el
+        /// servicio hacía `.Add` desde fuera.
+        /// </summary>
+        public IReadOnlyList<Vacuna> L_vacunas_aplicadas => l_vacunas_aplicadas;
+
+        /// <summary>Única vía para incorporar una vacuna al esquema del animal.</summary>
+        public void RegistrarVacunaAplicada(Vacuna vacuna) => l_vacunas_aplicadas.Add(vacuna);
 
         /// <summary>
         /// SC-2 · ADR-11 · Chip de geolocalización conectado al animal; `null` si no lleva.
@@ -151,8 +160,15 @@ namespace Bib_Hacienda.Clases
 
             Chip = new Chip(Chip.Identificador, latitud, longitud, cuando);
         }
-        public string Nombre { get => nombre; set => nombre = value; }
-        public uint Peso { get => peso; set => peso = value; }
+        public string Nombre { get => nombre; private set => nombre = value; }
+        public uint Peso { get => peso; private set => peso = value; }
+
+        /// <summary>
+        /// Comportamiento de dominio: alimentar al animal aumenta su peso. Sustituye a la
+        /// mutación externa `res.Peso += cantidad` que hacía GestorReses; el animal es el
+        /// único responsable de cambiar su propio peso.
+        /// </summary>
+        public void Alimentar(uint cantidad = 1) => peso += cantidad;
 
         // ── Política del tipo · antes vivía en siete archivos ajenos ─────────────
 

@@ -18,6 +18,6 @@ namespace Bib_Hacienda.Contratos
     {
         List<Vacuna> CargarVacunas();
 
-        void GuardarVacunas(List<Vacuna> vacunas);
+        void GuardarVacunas(IReadOnlyList<Vacuna> vacunas);
     }
 }

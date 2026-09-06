@@ -21,7 +21,7 @@ namespace Bib_Hacienda.Estrategias
         public void Aplicar(Hacienda hacienda, Potrero potrero, IArticuloVendible articulo)
         {
             var res = (Res)articulo;
-            hacienda.L_potreros.Where(p => p == potrero).FirstOrDefault().L_reses.Remove(res);
+            hacienda.L_potreros.Where(p => p == potrero).FirstOrDefault().RetirarRes(res);
         }
     }
 }
