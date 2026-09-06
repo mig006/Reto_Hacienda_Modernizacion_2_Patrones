@@ -117,7 +117,7 @@ pruebas y evidencia de comportamiento incluidos.
 | Factory Method | Creacional | P-01 · catálogo de vacunas | ✅ Adoptado |
 | Strategy | Comportamiento | P-02 · efecto de venta sobre el inventario | ✅ Adoptado — implementa además SC-1 |
 | Observer | Comportamiento | P-03 · publicadores de eventos del dominio | ✅ Adoptado |
-| Composite | Estructural | P-05 · validadores | ✅ Adoptado |
+| Composite | Estructural | P-05 · validadores | ✅ Adoptado — sobre `Res`; los otros cuatro validadores siguen monolíticos (deuda declarada) |
 
 Detalle completo de la decisión, alternativas evaluadas y descartes en
 [`02-decision-patrones/Decision-de-Patrones.md`](02-decision-patrones/Decision-de-Patrones.md).

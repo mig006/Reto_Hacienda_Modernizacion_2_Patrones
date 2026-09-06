@@ -121,13 +121,15 @@ constructor, con lo que recompilan `PotreroService`, `ResService` y `VacunaServi
 Un nivel más abajo, los validadores colapsan todas sus reglas en un `if`:
 
 ```csharp
-// ValidarRes.cs:19
+// ValidarRes.cs:19 — clase ValidadorRes, del diseño anterior
 if (res == null || string.IsNullOrWhiteSpace(res.Nombre) || res.Peso <= 0 || res.Edad <= 0)
     return ResultadoValidacion.Invalido();
 ```
 
 `Invalido()` devuelve siempre el mismo texto (`ResultadoValidacion.cs:23`), así que una regla nueva
 obliga a modificar la clase y el operario nunca sabe cuál de las cuatro condiciones falló.
+Ese archivo ya no está en `src/`: el Composite de la Actividad 3 lo eliminó y repartió sus cuatro
+condiciones en una clase cada una.
 
 **Qué cambió desde el Reto 1.** `GuardadoValidado` no existía: se creó durante el rediseño, como
 enmienda registrada en `04-evidencia/enmiendas-ADRs.md`, para no repetir el bucle en cinco servicios.

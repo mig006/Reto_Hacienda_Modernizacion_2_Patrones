@@ -46,8 +46,15 @@ errores evidentes, así que el riesgo de que alguien los «arregle» de buena fe
 registrado corresponde al artículo, `First` lanza en ejecución. Es el precio declarado de
 mover la decisión fuera del método: el compilador ya no la vigila.
 
-**R-04.** Se puntúa en 4 porque ya se materializó una vez durante esta entrega, y se detectó
-con la misma señal que aparece en la tabla. La corrección es previa a publicar el documento.
+**R-04.** Se puntúa en 4 porque ya se materializó **dos veces** durante esta entrega, y las dos
+se detectaron con la misma señal que aparece en la tabla. La segunda es la más ilustrativa: el
+Composite entró en el código el 4 de septiembre de 2026 a las 23:14 (commit `d809d6d`) y el
+diagrama definitivo se publicó 21 horas después (commit `2bd8a36`) con una nota que afirmaba
+«en el código actual no existe: no hay `ValidadorCompuesto` ni reglas atómicas por clase».
+Dibujaba `ValidadorRes`, clase que el propio commit `d809d6d` había eliminado. La divergencia
+no vino de un descuido de redacción sino del desfase entre dos personas trabajando sobre el
+mismo entregable en días distintos, que es exactamente el mecanismo que describe la fila.
+La corrección es previa a publicar el documento.
 
 **R-05.** `PublisherPotreroMitad.cs` lee del contexto la cantidad de reses y el potrero. En la
 lista de avisos de alimentación esos datos van vacíos, así que la condición numérica nunca se

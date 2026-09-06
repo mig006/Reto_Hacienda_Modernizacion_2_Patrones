@@ -106,38 +106,38 @@
         <mxCell id="A_46" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo;&lt;br&gt;&lt;b&gt;IValidador&amp;lt;T&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(entidad: T): ResultadoValidacion" vertex="1">
           <mxGeometry height="90" width="460" x="4020" y="910" as="geometry" />
         </mxCell>
-        <mxCell id="A_47" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorRes&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
+        <mxCell id="A_47" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorRes&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;un unico if de 4 condiciones (ValidarRes.cs:19)&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
           <mxGeometry height="74" width="440" x="4020" y="1040" as="geometry" />
         </mxCell>
         <mxCell id="A_48" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorPotrero&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(potrero: Potrero): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1154" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="1666" as="geometry" />
         </mxCell>
         <mxCell id="A_49" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorVacuna&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(vacuna: Vacuna): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1268" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="1780" as="geometry" />
         </mxCell>
         <mxCell id="A_50" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorVenta&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(venta: Venta): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1382" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="1894" as="geometry" />
         </mxCell>
         <mxCell id="A_51" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorChip&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(chip: Chip): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1496" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="2008" as="geometry" />
         </mxCell>
         <mxCell id="A_52" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&amp;laquo;value&amp;raquo;&lt;br&gt;&lt;b&gt;ResultadoValidacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ {const} TextoValido / TextoInvalido: string&lt;br&gt;+ EsValido: bool&lt;br&gt;+ Mensaje: string&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ {static} Valido(): ResultadoValidacion&lt;br&gt;+ {static} Invalido(): ResultadoValidacion" vertex="1">
-          <mxGeometry height="162" width="480" x="4020" y="1610" as="geometry" />
+          <mxGeometry height="162" width="480" x="4020" y="2122" as="geometry" />
         </mxCell>
         <mxCell id="A_53" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&amp;laquo;value&amp;raquo;&lt;br&gt;&lt;b&gt;ResultadoOperacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Exito: bool&lt;br&gt;+ Mensaje: string&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ {static} Exitoso(mensaje): ResultadoOperacion&lt;br&gt;+ {static} Fallido(mensaje): ResultadoOperacion" vertex="1">
-          <mxGeometry height="144" width="480" x="4020" y="1812" as="geometry" />
+          <mxGeometry height="144" width="480" x="4020" y="2324" as="geometry" />
         </mxCell>
         <mxCell id="A_54" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&amp;laquo;value&amp;raquo;&lt;br&gt;&lt;b&gt;Chip&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Identificador: string&lt;br&gt;+ Latitud: double&lt;br&gt;+ Longitud: double&lt;br&gt;+ UltimaLectura: DateTime&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Chip(identificador, latitud, longitud, ultimaLectura)" vertex="1">
-          <mxGeometry height="162" width="460" x="4020" y="1996" as="geometry" />
+          <mxGeometry height="162" width="460" x="4020" y="2508" as="geometry" />
         </mxCell>
         <mxCell id="A_55" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo;&lt;br&gt;&lt;b&gt;IAutenticacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ AutorizarOperacion(usuario: Usuario, operacion: string): void" vertex="1">
-          <mxGeometry height="90" width="460" x="4020" y="2198" as="geometry" />
+          <mxGeometry height="90" width="460" x="4020" y="2710" as="geometry" />
         </mxCell>
         <mxCell id="A_56" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;Autenticacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;- usuarios_registrados: List&amp;lt;Usuario&amp;gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Autenticacion()&lt;br&gt;+ crear_usuario(nombre, contrasena): string&lt;br&gt;+ listar_usuarios(): List&amp;lt;Usuario&amp;gt;&lt;br&gt;+ ValidarCredenciales(nombre, contrasena): bool&lt;br&gt;+ buscar_usuario(nombre): Usuario&lt;br&gt;+ AutorizarOperacion(usuario, operacion): void" vertex="1">
-          <mxGeometry height="182" width="520" x="4020" y="2328" as="geometry" />
+          <mxGeometry height="182" width="520" x="4020" y="2840" as="geometry" />
         </mxCell>
         <mxCell id="A_57" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;Usuario&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;- nombre: string&lt;br&gt;- contrasena: string&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Usuario(nombre: string, contrasena: string)&lt;br&gt;+ Nombre / Contrasena" vertex="1">
-          <mxGeometry height="128" width="420" x="4020" y="2550" as="geometry" />
+          <mxGeometry height="128" width="420" x="4020" y="3062" as="geometry" />
         </mxCell>
         <mxCell id="A_58" parent="layer-asis" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo;&lt;br&gt;&lt;b&gt;IRepositorioPotreros&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ CargarPotreros(): List&amp;lt;Potrero&amp;gt;&lt;br&gt;+ CargarReses(potreros: List&amp;lt;Potrero&amp;gt;): void&lt;br&gt;+ CargarVacunasAplicadas(potreros: List&amp;lt;Potrero&amp;gt;): void&lt;br&gt;+ GuardarPotreros(potreros): void&lt;br&gt;+ GuardarReses(potreros): void&lt;br&gt;+ GuardarVacunasAplicadas(potreros): void" vertex="1">
           <mxGeometry height="180" width="560" x="4700" y="910" as="geometry" />
@@ -557,41 +557,41 @@
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;Hacienda&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;- l_potreros: List&amp;lt;Potrero&amp;gt;&lt;br&gt;- l_ventas: List&amp;lt;Venta&amp;gt;&lt;br&gt;- l_vacunas: List&amp;lt;Vacuna&amp;gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Hacienda()&lt;br&gt;+ L_potreros / L_ventas / L_vacunas {get; private set}" vertex="1">
           <mxGeometry height="146" width="520" x="3340" y="2078" as="geometry" />
         </mxCell>
-        <mxCell id="DkbYuKZBiHKNnIfZTDvD-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo;&lt;br&gt;&lt;b&gt;IValidador&amp;lt;T&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(entidad: T): ResultadoValidacion" vertex="1">
+        <mxCell id="DkbYuKZBiHKNnIfZTDvD-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo; &amp;middot; &amp;laquo;Composite &amp;middot; componente&amp;raquo;&lt;br&gt;&lt;b&gt;IValidador&amp;lt;T&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(entidad: T): ResultadoValidacion" vertex="1">
           <mxGeometry height="90" width="460" x="4020" y="910" as="geometry" />
         </mxCell>
-        <mxCell id="DkbYuKZBiHKNnIfZTDvD-47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorRes&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1040" as="geometry" />
+        <mxCell id="DkbYuKZBiHKNnIfZTDvD-47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&amp;laquo;Composite &amp;middot; compuesto&amp;raquo;&lt;br&gt;&lt;b&gt;ValidadorCompuesto&amp;lt;T&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;- _reglas: IReadOnlyCollection&amp;lt;IValidador&amp;lt;T&amp;gt;&amp;gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ ValidadorCompuesto(reglas: IEnumerable&amp;lt;IValidador&amp;lt;T&amp;gt;&amp;gt;)&lt;br&gt;+ Validar(entidad: T): ResultadoValidacion" vertex="1">
+          <mxGeometry height="130" width="440" x="4020" y="1040" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-48" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorPotrero&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(potrero: Potrero): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1154" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="1666" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorVacuna&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(vacuna: Vacuna): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1268" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="1780" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-50" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorVenta&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(venta: Venta): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1382" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="1894" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-51" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;ValidadorChip&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(chip: Chip): ResultadoValidacion" vertex="1">
-          <mxGeometry height="74" width="440" x="4020" y="1496" as="geometry" />
+          <mxGeometry height="74" width="440" x="4020" y="2008" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&amp;laquo;value&amp;raquo;&lt;br&gt;&lt;b&gt;ResultadoValidacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ {const} TextoValido / TextoInvalido: string&lt;br&gt;+ EsValido: bool&lt;br&gt;+ Mensaje: string&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ {static} Valido(): ResultadoValidacion&lt;br&gt;+ {static} Invalido(): ResultadoValidacion" vertex="1">
-          <mxGeometry height="162" width="480" x="4020" y="1610" as="geometry" />
+          <mxGeometry height="162" width="480" x="4020" y="2122" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-53" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&amp;laquo;value&amp;raquo;&lt;br&gt;&lt;b&gt;ResultadoOperacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Exito: bool&lt;br&gt;+ Mensaje: string&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ {static} Exitoso(mensaje): ResultadoOperacion&lt;br&gt;+ {static} Fallido(mensaje): ResultadoOperacion" vertex="1">
-          <mxGeometry height="144" width="480" x="4020" y="1812" as="geometry" />
+          <mxGeometry height="144" width="480" x="4020" y="2324" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-54" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&amp;laquo;value&amp;raquo;&lt;br&gt;&lt;b&gt;Chip&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Identificador: string&lt;br&gt;+ Latitud: double&lt;br&gt;+ Longitud: double&lt;br&gt;+ UltimaLectura: DateTime&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Chip(identificador, latitud, longitud, ultimaLectura)" vertex="1">
-          <mxGeometry height="162" width="460" x="4020" y="1996" as="geometry" />
+          <mxGeometry height="162" width="460" x="4020" y="2508" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-55" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo;&lt;br&gt;&lt;b&gt;IAutenticacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ AutorizarOperacion(usuario: Usuario, operacion: string): void" vertex="1">
-          <mxGeometry height="90" width="460" x="4020" y="2198" as="geometry" />
+          <mxGeometry height="90" width="460" x="4020" y="2710" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-56" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;Autenticacion&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;- usuarios_registrados: List&amp;lt;Usuario&amp;gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Autenticacion()&lt;br&gt;+ crear_usuario(nombre, contrasena): string&lt;br&gt;+ listar_usuarios(): List&amp;lt;Usuario&amp;gt;&lt;br&gt;+ ValidarCredenciales(nombre, contrasena): bool&lt;br&gt;+ buscar_usuario(nombre): Usuario&lt;br&gt;+ AutorizarOperacion(usuario, operacion): void" vertex="1">
-          <mxGeometry height="182" width="520" x="4020" y="2328" as="geometry" />
+          <mxGeometry height="182" width="520" x="4020" y="2840" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-57" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;Usuario&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;- nombre: string&lt;br&gt;- contrasena: string&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Usuario(nombre: string, contrasena: string)&lt;br&gt;+ Nombre / Contrasena" vertex="1">
-          <mxGeometry height="128" width="420" x="4020" y="2550" as="geometry" />
+          <mxGeometry height="128" width="420" x="4020" y="3062" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-58" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&amp;laquo;interface&amp;raquo;&lt;br&gt;&lt;b&gt;IRepositorioPotreros&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ CargarPotreros(): List&amp;lt;Potrero&amp;gt;&lt;br&gt;+ CargarReses(potreros: List&amp;lt;Potrero&amp;gt;): void&lt;br&gt;+ CargarVacunasAplicadas(potreros: List&amp;lt;Potrero&amp;gt;): void&lt;br&gt;+ GuardarPotreros(potreros): void&lt;br&gt;+ GuardarReses(potreros): void&lt;br&gt;+ GuardarVacunasAplicadas(potreros): void" vertex="1">
           <mxGeometry height="180" width="560" x="4700" y="910" as="geometry" />
@@ -653,7 +653,7 @@
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-77" edge="1" parent="1" source="DkbYuKZBiHKNnIfZTDvD-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-55" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="DkbYuKZBiHKNnIfZTDvD-78" edge="1" parent="1" source="DkbYuKZBiHKNnIfZTDvD-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;bind T-&amp;gt;Res&amp;raquo;">
+        <mxCell id="DkbYuKZBiHKNnIfZTDvD-78" edge="1" parent="1" source="DkbYuKZBiHKNnIfZTDvD-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;realiza&amp;raquo;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-79" edge="1" parent="1" source="DkbYuKZBiHKNnIfZTDvD-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;bind T-&amp;gt;Potrero&amp;raquo;">
@@ -1183,7 +1183,7 @@
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-220" parent="1" style="text;html=1;fontStyle=1;fontSize=15;align=left;verticalAlign=middle;" value="Servicios de dominio / Entidades" vertex="1">
           <mxGeometry height="30" width="620" x="3340" y="840" as="geometry" />
         </mxCell>
-        <mxCell id="DkbYuKZBiHKNnIfZTDvD-221" parent="1" style="text;html=1;fontStyle=1;fontSize=15;align=left;verticalAlign=middle;" value="Validacion segregada (ISP) + Autenticacion" vertex="1">
+        <mxCell id="DkbYuKZBiHKNnIfZTDvD-221" parent="1" style="text;html=1;fontStyle=1;fontSize=15;align=left;verticalAlign=middle;" value="COMPOSITE (P-05) - Validacion + Autenticacion" vertex="1">
           <mxGeometry height="30" width="620" x="4020" y="840" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-222" parent="1" style="text;html=1;fontStyle=1;fontSize=15;align=left;verticalAlign=middle;" value="Contratos de persistencia (DIP - SOLID Reto 1)" vertex="1">
@@ -1195,8 +1195,8 @@
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-224" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;dashed=1;" value="&lt;b&gt;Nota&lt;/b&gt;&lt;br&gt;Los 4 contratos de persistencia (DIP) los REALIZAN, en p_mvcHacienda/Infraestructura (fuera de esta capa de dominio):&lt;br&gt;&amp;bull; RepositorioPotrerosArchivo&lt;br&gt;&amp;bull; RepositorioVentasArchivo&lt;br&gt;&amp;bull; RepositorioCatalogoVacunasArchivo&lt;br&gt;&amp;bull; RepositorioUsuariosArchivo&lt;br&gt;Se cablean en RaizComposicion (composition root) y los usa CargadorInicial." vertex="1">
           <mxGeometry height="180" width="560" x="4700" y="1900" as="geometry" />
         </mxCell>
-        <mxCell id="DkbYuKZBiHKNnIfZTDvD-225" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="&lt;b&gt;Aclaracion sobre Composite (P-05)&lt;/b&gt;&lt;br&gt;El README lista Composite como &#39;en curso&#39;. En el CODIGO ACTUAL no existe: no hay ValidadorCompuesto&amp;lt;T&amp;gt; ni reglas atomicas por clase. La validacion esta SEGREGADA por tipo (ISP) con IValidador&amp;lt;T&amp;gt; y 5 validadores, cada uno con toda su logica en un solo metodo Validar(). Por eso esta capa NO dibuja Composite: refleja lo implementado." vertex="1">
-          <mxGeometry height="150" width="520" x="4020" y="2780" as="geometry" />
+        <mxCell id="DkbYuKZBiHKNnIfZTDvD-225" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="&lt;b&gt;Composite (P-05) - alcance real&lt;/b&gt;&lt;br&gt;El if de cuatro condiciones de ValidadorRes (ValidarRes.cs:19, clase eliminada) se partio en cuatro reglas bajo Clases/Validaciones/ReglasRes/, que agrupa ValidadorCompuesto&amp;lt;T&amp;gt;.&lt;br&gt;&lt;br&gt;La composicion y su ORDEN se fijan en RaizComposicion.cs:91-97: ReglaResNoNula va primera porque las otras tres asumen que la res no es nula. Corta en la primera regla que falla y devuelve el mismo literal congelado que el if original, asi que el mensaje que ve el operario no cambia.&lt;br&gt;&lt;br&gt;&lt;b&gt;Alcance:&lt;/b&gt; el patron se aplico SOLO a Res. ValidadorPotrero, ValidadorVacuna, ValidadorVenta y ValidadorChip siguen resolviendo todo en un unico metodo Validar(): es deuda declarada, no un olvido." vertex="1">
+          <mxGeometry height="250" width="620" x="4020" y="3292" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-226" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#ffffff;strokeColor=#333333;fontSize=12;" value="&lt;b&gt;LEYENDA&lt;/b&gt;&lt;br&gt;Colores: azul=interface, naranja=abstract, verde=entidad, amarillo=enum, morado=objeto de valor, rojo=fabrica/estrategia/publisher/servicio/validador.&lt;br&gt;&lt;br&gt;Relaciones:&lt;br&gt;&amp;bull; triangulo hueco + linea solida = generalizacion (herencia)&lt;br&gt;&amp;bull; triangulo hueco + linea punteada = realizacion (implements)&lt;br&gt;&amp;bull; rombo relleno = composicion &amp;nbsp;|&amp;nbsp; rombo hueco = agregacion&lt;br&gt;&amp;bull; flecha abierta solida = asociacion dirigida&lt;br&gt;&amp;bull; flecha abierta punteada (gris) = dependencia (usa/crea/param)" vertex="1">
           <mxGeometry height="220" width="1180" x="620" y="3040" as="geometry" />
@@ -1208,6 +1208,33 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="DkbYuKZBiHKNnIfZTDvD-229" edge="1" parent="1" source="DkbYuKZBiHKNnIfZTDvD-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;endFill=0;endSize=12;dashed=1;html=1;strokeColor=#777777;" target="DkbYuKZBiHKNnIfZTDvD-39" value="crea">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-hoja-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&amp;laquo;Composite &amp;middot; hoja&amp;raquo;&lt;br&gt;&lt;b&gt;ReglaResNoNula&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;corta si la res es null; va primera&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
+          <mxGeometry height="74" width="440" x="4020" y="1210" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-real-1" edge="1" parent="1" source="comp-hoja-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;bind T-&amp;gt;Res&amp;raquo;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-hoja-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&amp;laquo;Composite &amp;middot; hoja&amp;raquo;&lt;br&gt;&lt;b&gt;ReglaNombreObligatorio&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;nombre vacio o solo espacios&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
+          <mxGeometry height="74" width="440" x="4020" y="1324" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-real-2" edge="1" parent="1" source="comp-hoja-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;bind T-&amp;gt;Res&amp;raquo;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-hoja-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&amp;laquo;Composite &amp;middot; hoja&amp;raquo;&lt;br&gt;&lt;b&gt;ReglaPesoPositivo&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;peso &amp;lt;= 0&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
+          <mxGeometry height="74" width="440" x="4020" y="1438" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-real-3" edge="1" parent="1" source="comp-hoja-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;bind T-&amp;gt;Res&amp;raquo;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-hoja-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=visible;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&amp;laquo;Composite &amp;middot; hoja&amp;raquo;&lt;br&gt;&lt;b&gt;ReglaEdadPositiva&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;edad &amp;lt;= 0 (deuda congelada D-2)&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;&lt;br&gt;+ Validar(res: Res): ResultadoValidacion" vertex="1">
+          <mxGeometry height="74" width="440" x="4020" y="1552" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-real-4" edge="1" parent="1" source="comp-hoja-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=0;endSize=16;dashed=1;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="&amp;laquo;bind T-&amp;gt;Res&amp;raquo;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-agrega" edge="1" parent="1" source="DkbYuKZBiHKNnIfZTDvD-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;startArrow=diamondThin;startFill=0;startSize=16;endArrow=none;html=1;strokeColor=#000000;" target="DkbYuKZBiHKNnIfZTDvD-46" value="_reglas 1..*">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>

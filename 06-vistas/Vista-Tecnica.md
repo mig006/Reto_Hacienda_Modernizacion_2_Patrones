@@ -67,8 +67,13 @@ nuevo en cualquiera de las cuatro familias cuesta una clase y una línea.
   reescribir el archivo de datos del cliente.
 - La persistencia lee por posición de columna en 4 mapeadores y 4 repositorios, y una línea corta
   se descarta sin lanzar excepción. Es el riesgo de mayor exposición del registro.
-- `GuardadoValidado` conserva 7 dependencias y 5 métodos casi idénticos: se anunció unificarlos
-  con un método genérico y no se hizo.
+- `GuardadoValidado` conserva sus 7 dependencias por constructor. El bucle validar → cortar sí se
+  unificó en el genérico `Validar<T>` (`GuardadoValidado.cs:88`), pero `GuardarVacunasAplicadas`
+  mantiene su propio bucle anidado: el orden de recorrido decide cuál es el último resultado
+  registrado, y eso es salida observable.
+- El catálogo de vacunas se resuelve por fábrica al **crear**, pero al **contar** sigue preguntando
+  por el tipo con `is` (`ServicioVacunacion.cs:73-96,118-122`), y la entidad `Res` conserva un tope
+  por tipo de vacuna. Un tipo de vacuna nuevo cuesta una clase en la creación y dos ramas aquí.
 - El agrupamiento de reglas se aplicó solo a `Res`. `ValidadorPotrero`, `ValidadorVacuna` y
   `ValidadorVenta` siguen resolviendo todo en un condicional único, así que en ellos la fila
   «una regla nueva» todavía no es cierta.
