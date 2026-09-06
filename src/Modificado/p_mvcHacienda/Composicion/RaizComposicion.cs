@@ -88,7 +88,7 @@ namespace p_mvcHacienda.Composicion
             builder.Services.AddSingleton<IValidador<Potrero>>(_ =>
                 new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }));
             builder.Services.AddSingleton<IValidador<Res>>(_ =>
-                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }));
+                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva() }));
             builder.Services.AddSingleton<IValidador<Vacuna>>(_ =>
                 new ValidadorCompuesto<Vacuna>(new IValidador<Vacuna>[] { new ValidadorVacuna() }));
             builder.Services.AddSingleton<IValidador<Venta>>(_ =>

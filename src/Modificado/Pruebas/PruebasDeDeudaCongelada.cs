@@ -162,7 +162,7 @@ namespace Bib_Hacienda.Pruebas
             });
             var guardado = new GuardadoValidado(repoPotreros, repoVentas, repoCatalogo,
                 new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }),
-                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }),
+                new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva() }),
                 new ValidadorCompuesto<Vacuna>(new IValidador<Vacuna>[] { new ValidadorVacuna() }),
                 new ValidadorCompuesto<Venta>(new IValidador<Venta>[] { new ValidadorVenta() }));
 
