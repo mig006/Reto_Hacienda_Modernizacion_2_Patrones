@@ -1,5 +1,6 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
+using Bib_Hacienda.Clases.Validaciones.ReglasRes;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Eventos;
 using Bib_Hacienda.Fabricas;
@@ -155,6 +156,10 @@ namespace Bib_Hacienda.Pruebas
             IRepositorioVentas repoVentas = new RepositorioVentasArchivo(datos, Fabricas);
             IRepositorioCatalogoVacunas repoCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
 
+            var validadorRes = new ValidadorCompuesto<Res>(new IValidador<Res>[]
+            {
+                new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva(),
+            });
             var guardado = new GuardadoValidado(repoPotreros, repoVentas, repoCatalogo,
                 new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }),
                 new ValidadorCompuesto<Res>(new IValidador<Res>[] { new ValidadorRes() }),

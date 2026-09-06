@@ -4,3 +4,9 @@ Reto_Hacienda_Modernizacion_SOLID/
 # Artefactos de compilación .NET (para cuando entre el código en src/)
 bin/
 obj/
+CLAUDE.md
+
+# Archivos de configuración de IDEs
+.vscode/
+# Auditor de la entrega — herramienta de trabajo, no entregable
+verificar-entrega.py

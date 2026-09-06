@@ -1,0 +1,58 @@
+Patrones del Reto 2 · casos 19 a 22
+Ejercitan lo que Observer, Strategy y Composite tocan; no comparan contra el Reto 1.
+
+################################################################
+## FIXTURE F4 · Patrones del Reto 2 · casos 19 a 22
+################################################################
+Ejecutados sobre los datos históricos. Sin línea base: el Reto 1 no tenía estos casos.
+[consola] Datos cargados: 4 potreros, 2 ventas, 18 vacunas
+
+################################################################
+## CASO 19 · Observer (P-03) · un aviso nuevo se integra sin tocar Potrero ni GestorReses
+################################################################
+AvisoDeAuditoria se agrega en la raíz de composición de esta prueba, no en el dominio.
+
+=== alimentar con el aviso nuevo agregado a avisosAlimentacion ===
+[mensaje] La res 'Chispa' ha sido alimentada, ahora pesa 301 kg.
+[Evento] La res 'Chispa' tiene un peso 301, apta para venta.
+[Auditoría] operación registrada
+[veredicto] el aviso nuevo disparó sin una sola línea de código en Potrero.cs ni GestorReses.cs
+
+################################################################
+## CASO 20 · Strategy (P-02) · SC-1 · vender un producto derivado no toca el inventario
+################################################################
+
+=== vender 150 litros de leche de 'Potrero_Cebones' ===
+[mensaje] Venta de 150 unidad(es) de Lacteo realizada con éxito
+[tipo] success
+[navegacion] RedirectToAction(Index)
+[reses-antes] 226
+[reses-despues] 226
+[veredicto] inventario intacto (EfectoVentaSinEfecto)
+
+################################################################
+## CASO 21 · Strategy (P-02) · contraste: vender una res sí la retira del potrero
+################################################################
+
+=== vender 'Rayo' de 'Potrero_Cebones' por 900000 ===
+[mensaje] Venta de la res Rayo realizada con exito
+[tipo] success
+[navegacion] RedirectToAction(Index)
+[reses-antes] 226
+[reses-despues] 225
+[veredicto] la res se retiró (EfectoVentaRetiroInventario)
+
+################################################################
+## CASO 22 · Composite (P-05) · una res con edad 0 se agrega en memoria y NO se guarda en disco
+################################################################
+Antes: la cuarta condición de un `if` en ValidarRes.cs. Ahora: ReglaEdadPositiva, la
+última de cuatro reglas compuestas por ValidadorCompuesto<Res>.
+
+=== alta de 'SinEdad' (0 meses) en un potrero de terneros ===
+[mensaje] La res SinEdad ha sido añadida al potrero Potrero_Terneros con exito.
+[Evento] La res 'SinEdad' tiene un peso 120, está en desnutrición.. Datos inválidos. NO se guardó en BD
+[tipo] success
+[navegacion] RedirectToAction(Index)
+[en-memoria] SÍ
+[en-disco] NO
+[veredicto] ReglaEdadPositiva cortó el guardado; el texto es el mismo Invalido() de siempre

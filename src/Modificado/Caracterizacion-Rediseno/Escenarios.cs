@@ -1,5 +1,6 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
+using Bib_Hacienda.Clases.Validaciones.ReglasRes;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Eventos;
@@ -85,6 +86,12 @@ namespace Caracterizacion.Rediseno
             _repositorioVentas = new RepositorioVentasArchivo(datos, fabricas);
             _repositorioCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
             _repositorioUsuarios = new RepositorioUsuariosArchivo(datos);
+
+            // Composite (P-05, Actividad 2) · mismo registro que RaizComposicion.
+            var validadorRes = new ValidadorCompuesto<Res>(new IValidador<Res>[]
+            {
+                new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva(),
+            });
 
             _guardado = new GuardadoValidado(
                 _repositorioPotreros, _repositorioVentas, _repositorioCatalogo,
@@ -563,6 +570,144 @@ namespace Caracterizacion.Rediseno
             _r.Campo("reses-sin-chip-que-siguen-cargando",
                 _resService.ObtenerTodasLasReses().Count(r => r.Res.Chip == null).ToString());
             _r.Campo("veredicto-ADR-11", "el identificador se conserva; el objeto de valor se reemplazó, no se mutó");
+        }
+
+        // ------------------------------------------------------------------
+        // Fixture F4 · Patrones del Reto 2 · casos 19 a 22 (Actividad 4.2)
+        //
+        // Los quince casos de F2 y los tres de F3 ya prueban, con diff vacío, que
+        // adoptar los cuatro patrones no cambió ni un carácter de lo que había. Estos
+        // cuatro casos nuevos ejercitan justamente lo que los patrones tocan: un aviso
+        // que Potrero y GestorReses nunca vieron, los dos extremos de Strategy sin un
+        // `if` nuevo, y la regla de Composite que antes vivía dentro de un `if` de
+        // cuatro condiciones. Van a su propio archivo por la misma razón que F3: no hay
+        // línea base con la que compararlos —el Reto 1 no vendía derivados ni tenía
+        // este registro de avisos—, así que mezclarlos con salida-rediseñada.txt
+        // rompería el diff que prueba la preservación de los quince casos anteriores.
+        // ------------------------------------------------------------------
+
+        public void EjecutarPatronesReto2()
+        {
+            _r.Seccion("FIXTURE F4 · Patrones del Reto 2 · casos 19 a 22");
+            _r.Linea("Ejecutados sobre los datos históricos. Sin línea base: el Reto 1 no tenía estos casos.");
+
+            RecargarDesdeDisco();
+
+            Caso19ObserverAvisoNuevoSinTocarElConsumidor();
+            Caso20VenderProductoDerivadoNoTocaInventario();
+            Caso21VenderResSiRetiraDelInventario();
+            Caso22CompositeCortaPorEdadCero();
+        }
+
+        /// <summary>Aviso de prueba: no es ninguno de los cinco publicadores del Anexo A.</summary>
+        private sealed class AvisoDeAuditoria : IPublicadorEvento
+        {
+            public void Informar(ContextoAviso contexto, IReceptorEventos receptor)
+                => receptor.Notificar("[Auditoría] operación registrada");
+        }
+
+        /// <summary>
+        /// CASO 19 · Observer (P-03) · Un tercer tipo de aviso —que ni Potrero ni
+        /// GestorReses conocían al escribirse— se agrega en un registro paralelo, sin
+        /// tocar ninguna de las dos clases. Es la prueba de OCP que la Actividad 4 pide
+        /// para cada patrón adoptado.
+        /// </summary>
+        private void Caso19ObserverAvisoNuevoSinTocarElConsumidor()
+        {
+            _r.Seccion("CASO 19 · Observer (P-03) · un aviso nuevo se integra sin tocar Potrero ni GestorReses");
+            _r.Linea("AvisoDeAuditoria se agrega en la raíz de composición de esta prueba, no en el dominio.");
+
+            var haciendaDemo = new Hacienda();
+            var gestorPotrerosDemo = new GestorPotreros(haciendaDemo);
+            var fabricasDemo = new IFabricaRes[] { new FabricaTernero(), new FabricaCebon(), new FabricaNovillo() };
+            var gestorResesDemo = new GestorReses(haciendaDemo, gestorPotrerosDemo, new PoliticaCapacidadPotrero(), fabricasDemo,
+                avisosAltaDeRes: Array.Empty<IPublicadorEvento>(),
+                avisosAlimentacion: new IPublicadorEvento[] { new PublisherPesoMin(), new PublisherPesoVenta(), new AvisoDeAuditoria() });
+
+            gestorPotrerosDemo.crear_potrero("Demo_Observer", l_tipos_potreros.ternero);
+            var potreroDemo = gestorPotrerosDemo.buscar_potrero("Demo_Observer");
+            potreroDemo.anadir_res("Chispa", 6, 300, new PoliticaCapacidadPotrero(), fabricasDemo, Array.Empty<IPublicadorEvento>());
+
+            string mensaje = gestorResesDemo.alimentar_res("Demo_Observer", "Chispa", 1);
+            _r.Titulo("alimentar con el aviso nuevo agregado a avisosAlimentacion");
+            _r.Campo("mensaje", Normalizador.Normalizar(mensaje));
+            _r.Campo("veredicto", mensaje.Contains("[Auditoría]")
+                ? "el aviso nuevo disparó sin una sola línea de código en Potrero.cs ni GestorReses.cs"
+                : "FALLO: el aviso nuevo no se disparó");
+        }
+
+        /// <summary>
+        /// CASO 20 · Strategy (P-02) · SC-1 · Vender un producto derivado no toca el
+        /// inventario de ganado: lo resuelve EfectoVentaSinEfecto por el registro de
+        /// IEfectoVenta, no un camino especial dentro de ServicioVenta.
+        /// </summary>
+        private void Caso20VenderProductoDerivadoNoTocaInventario()
+        {
+            _r.Seccion("CASO 20 · Strategy (P-02) · SC-1 · vender un producto derivado no toca el inventario");
+
+            int resesAntes = _resService.ObtenerTodasLasReses().Count;
+            NuevaPeticion();
+            _r.ComoControladorQueRelanza("vender 150 litros de leche de 'Potrero_Cebones'",
+                () => _ventaService.VenderProducto("Potrero_Cebones", TipoProducto.Lacteo, 150, 600000));
+            int resesDespues = _resService.ObtenerTodasLasReses().Count;
+
+            _r.Campo("reses-antes", resesAntes.ToString());
+            _r.Campo("reses-despues", resesDespues.ToString());
+            _r.Campo("veredicto", resesAntes == resesDespues
+                ? "inventario intacto (EfectoVentaSinEfecto)"
+                : "FALLO: el inventario cambió al vender un producto derivado");
+        }
+
+        /// <summary>
+        /// CASO 21 · Strategy (P-02) · El otro extremo del mismo registro: vender una
+        /// res sí la retira, por EfectoVentaRetiroInventario. Mismo ServicioVenta que el
+        /// CASO 20, sin un solo `if` que distinga los dos casos.
+        /// </summary>
+        private void Caso21VenderResSiRetiraDelInventario()
+        {
+            _r.Seccion("CASO 21 · Strategy (P-02) · contraste: vender una res sí la retira del potrero");
+
+            var primera = _resService.ObtenerTodasLasReses().First();
+            string potreroId = primera.Potrero.Identificacion;
+            string nombreRes = primera.Res.Nombre;
+            int resesAntes = _resService.ObtenerTodasLasReses().Count;
+
+            NuevaPeticion();
+            _r.ComoControladorQueRelanza($"vender '{nombreRes}' de '{potreroId}' por 900000",
+                () => _resService.VenderRes(potreroId, nombreRes, 900000));
+            int resesDespues = _resService.ObtenerTodasLasReses().Count;
+
+            _r.Campo("reses-antes", resesAntes.ToString());
+            _r.Campo("reses-despues", resesDespues.ToString());
+            _r.Campo("veredicto", resesDespues == resesAntes - 1
+                ? "la res se retiró (EfectoVentaRetiroInventario)"
+                : "FALLO: la res no se retiró");
+        }
+
+        /// <summary>
+        /// CASO 22 · Composite (P-05) · Una res con edad 0 se agrega en memoria —la edad
+        /// 0 es válida para el ALTA en un potrero de terneros— pero ReglaEdadPositiva,
+        /// la cuarta regla de ValidadorCompuesto&lt;Res&gt;, corta el guardado. Antes era
+        /// la cuarta condición de un `if`; el texto que ve el operario no cambió.
+        /// </summary>
+        private void Caso22CompositeCortaPorEdadCero()
+        {
+            _r.Seccion("CASO 22 · Composite (P-05) · una res con edad 0 se agrega en memoria y NO se guarda en disco");
+            _r.Linea("Antes: la cuarta condición de un `if` en ValidarRes.cs. Ahora: ReglaEdadPositiva, la");
+            _r.Linea("última de cuatro reglas compuestas por ValidadorCompuesto<Res>.");
+
+            NuevaPeticion();
+            _r.ComoControladorQueRelanza("alta de 'SinEdad' (0 meses) en un potrero de terneros",
+                () => _potreroService.AgregarRes("Potrero_Terneros", "SinEdad", 0, 120));
+
+            _r.Campo("en-memoria", _resService.ObtenerTodasLasReses().Any(r => r.Res.Nombre == "SinEdad") ? "SÍ" : "NO");
+
+            string ruta = Path.Combine(_raizContenido, "Datos", "Reses.txt");
+            bool enDisco = File.Exists(ruta) && File.ReadAllLines(ruta).Any(l => l.Contains("SinEdad"));
+            _r.Campo("en-disco", enDisco ? "SÍ" : "NO");
+            _r.Campo("veredicto", !enDisco
+                ? "ReglaEdadPositiva cortó el guardado; el texto es el mismo Invalido() de siempre"
+                : "FALLO: se guardó una res con edad 0");
         }
 
         // ------------------------------------------------------------------

@@ -65,40 +65,56 @@ namespace p_mvcHacienda.Servicios
         }
 
         // ── Guardados ─────────────────────────────────────────────────────
+        //
+        // P-05 (Actividad 1) · Actividad 2 · La otra mitad de P-05, la que NO es un
+        // patrón: cuatro de los cinco métodos hacían exactamente el mismo bucle
+        // validar → cortar → persistir, cambiando solo el tipo. Ahora ese bucle vive
+        // una sola vez en Validar<T>; cada método arma su lista, valida y decide si
+        // persiste. Un agregado nuevo dejó de costar "otro método con el mismo cuerpo".
+        //
+        // GuardarVacunasAplicadas NO entra en el genérico y se queda con su propio
+        // bucle: valida DOS TIPOS distintos intercalados —una res y, si es válida, sus
+        // vacunas, antes de pasar a la siguiente res—, y ese orden intercalado es
+        // comportamiento observable (determina cuál es el último resultado registrado
+        // cuando todo valida). Validar<T> generaliza "una lista, un tipo, un validador";
+        // forzarlo aquí habría exigido una lista mixta o dos pasadas, y una segunda
+        // pasada valida res que la primera ya había cortado. Se documenta como el
+        // límite honesto del refactor, no como un olvido.
+
+        /// <summary>
+        /// El bucle único: valida cada elemento en orden y corta en el primero que
+        /// falla, sin persistir. Reemplaza el cuerpo que se repetía en cuatro métodos.
+        /// </summary>
+        private static ResultadoValidacion? Validar<T>(IEnumerable<T> elementos, IValidador<T> validador)
+        {
+            ResultadoValidacion? ultima = null;
+            foreach (var elemento in elementos)
+            {
+                ultima = validador.Validar(elemento);
+                if (!ultima.EsValido) return ultima;   // corte temprano: no se escribe
+            }
+            return ultima;
+        }
 
         public ResultadoValidacion? GuardarPotreros(IReadOnlyList<Potrero> potreros)
         {
-            ResultadoValidacion? ultima = null;
-            foreach (var potrero in potreros)
-            {
-                ultima = _validadorPotrero.Validar(potrero);
-                if (!ultima.EsValido) return ultima;   // corte temprano: no se escribe
-            }
-
-            _repositorioPotreros.GuardarPotreros(potreros);
-            return ultima;
+            var resultado = Validar(potreros, _validadorPotrero);
+            if (resultado == null || resultado.EsValido) _repositorioPotreros.GuardarPotreros(potreros);
+            return resultado;
         }
 
         public ResultadoValidacion? GuardarReses(IReadOnlyList<Potrero> potreros)
         {
-            ResultadoValidacion? ultima = null;
-            foreach (var potrero in potreros)
-            {
-                foreach (var res in potrero.L_reses)
-                {
-                    ultima = _validadorRes.Validar(res);
-                    if (!ultima.EsValido) return ultima;
-                }
-            }
-
-            _repositorioPotreros.GuardarReses(potreros);
-            return ultima;
+            var resultado = Validar(potreros.SelectMany(p => p.L_reses), _validadorRes);
+            if (resultado == null || resultado.EsValido) _repositorioPotreros.GuardarReses(potreros);
+            return resultado;
         }
 
         /// <summary>
         /// Valida cada res y, dentro de cada una, cada vacuna aplicada. El orden importa:
         /// es el que fija PersistenciaService.cs:230-260, y determina cuál es el último
-        /// resultado registrado cuando todo valida.
+        /// resultado registrado cuando todo valida. Ver la nota de §Guardados sobre por
+        /// qué este método, a diferencia de los otros cuatro, no usa Validar&lt;T&gt;.
         /// </summary>
         public ResultadoValidacion? GuardarVacunasAplicadas(IReadOnlyList<Potrero> potreros)
         {
@@ -124,28 +140,16 @@ namespace p_mvcHacienda.Servicios
 
         public ResultadoValidacion? GuardarVacunas(IReadOnlyList<Vacuna> vacunas)
         {
-            ResultadoValidacion? ultima = null;
-            foreach (var vacuna in vacunas)
-            {
-                ultima = _validadorVacuna.Validar(vacuna);
-                if (!ultima.EsValido) return ultima;
-            }
-
-            _repositorioCatalogoVacunas.GuardarVacunas(vacunas);
-            return ultima;
+            var resultado = Validar(vacunas, _validadorVacuna);
+            if (resultado == null || resultado.EsValido) _repositorioCatalogoVacunas.GuardarVacunas(vacunas);
+            return resultado;
         }
 
         public ResultadoValidacion? GuardarVentas(IReadOnlyList<Venta> ventas)
         {
-            ResultadoValidacion? ultima = null;
-            foreach (var venta in ventas)
-            {
-                ultima = _validadorVenta.Validar(venta);
-                if (!ultima.EsValido) return ultima;
-            }
-
-            _repositorioVentas.GuardarVentas(ventas);
-            return ultima;
+            var resultado = Validar(ventas, _validadorVenta);
+            if (resultado == null || resultado.EsValido) _repositorioVentas.GuardarVentas(ventas);
+            return resultado;
         }
 
         // ── Contrato de texto congelado (ADR-02) ──────────────────────────

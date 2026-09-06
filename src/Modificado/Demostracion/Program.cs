@@ -1,5 +1,6 @@
 using Bib_Hacienda.Clases;
 using Bib_Hacienda.Clases.Validaciones;
+using Bib_Hacienda.Clases.Validaciones.ReglasRes;
 using Bib_Hacienda.Contratos;
 using Bib_Hacienda.Estrategias;
 using Bib_Hacienda.Eventos;
@@ -94,6 +95,13 @@ namespace Demostracion
             IRepositorioVentas repoVentas = new RepositorioVentasArchivo(datos, fabricas);
             IRepositorioCatalogoVacunas repoCatalogo = new RepositorioCatalogoVacunasArchivo(datos);
             IRepositorioUsuarios repoUsuarios = new RepositorioUsuariosArchivo(datos);
+
+            // Composite (P-05, Actividad 2) · mismo registro que RaizComposicion: no
+            // nula primero, porque las otras tres reglas asumen una res no nula.
+            var validadorRes = new ValidadorCompuesto<Res>(new IValidador<Res>[]
+            {
+                new ReglaResNoNula(), new ReglaNombreObligatorio(), new ReglaPesoPositivo(), new ReglaEdadPositiva(),
+            });
 
             var guardado = new GuardadoValidado(repoPotreros, repoVentas, repoCatalogo,
                 new ValidadorCompuesto<Potrero>(new IValidador<Potrero>[] { new ValidadorPotrero() }),
