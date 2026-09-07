@@ -1,5 +1,22 @@
 # Vista para el negocio
 
+## De qué sistema hablamos
+
+Es el programa con el que la hacienda lleva el día a día del ganado. El personal entra desde el
+navegador con su usuario y su clave, y ahí registra los potreros —cada uno admite hasta 150
+animales—, los animales que hay en cada potrero con su nombre, peso y edad, las vacunas que se
+les aplican y las ventas. Toda la información queda guardada en archivos dentro del propio
+servidor de la finca: no hay base de datos ni servicios de terceros.
+
+Lo que el programa aporta, más allá de guardar datos, es que conoce las reglas de la hacienda y
+avisa solo. Sabe que un animal pasa por tres etapas —ternero hasta los doce meses, después cebón
+y novillo—, que cada etapa tiene un peso mínimo saludable y un peso recomendado para vender, y
+cuántas vacunas de cada tipo admite un animal según la etapa en la que esté. Con eso le avisa al
+operario cuando un potrero va por la mitad, cuando se llena, cuando un animal está por debajo de
+su peso saludable, cuando alcanza el peso de venta, cuando termina su plan de vacunación y
+cuando una vacuna se vence. El trimestre pasado se le añadió además el seguimiento por chip de
+localización de cada animal.
+
 ## Qué le vamos a hacer al sistema y qué no cambia
 
 Cambiamos cómo está armado el programa por dentro. Por fuera no cambia nada: los mismos

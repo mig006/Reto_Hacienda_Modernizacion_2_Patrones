@@ -105,8 +105,8 @@ Evaluamos **10 patrones** (≥2 por familia) y adoptamos **4**, uno por cada pun
 ## 4. Actividad 2.2 · Bitácora de decisiones frente a la IA  *(Criterio 2 — 20%)*
 
 > **15 decisiones registradas** (mínimo exigido: 10). El detalle ampliado de cada una está en
-> `02-decision-patrones/Decision-de-Patrones.md` §2.2. Cinco son rechazos a la herramienta, cinco
-> correcciones, tres aceptaciones verificadas y una de origen propio.
+> `02-decision-patrones/Decision-de-Patrones.md` §2.2. Seis son rechazos a la herramienta, seis
+> correcciones, dos aceptaciones verificadas y una de origen propio.
 
 | ID | Qué consultamos | Qué propuso la herramienta | Qué hicimos | Argumento propio y evidencia |
 |---|---|---|---|---|
@@ -305,6 +305,10 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 
 > **Para:** la Líder Técnica y quien aprueba el presupuesto — personas que deciden, asumen el riesgo y no leen código.
 
+**De qué sistema hablamos.** Es el programa con el que la hacienda lleva el día a día del ganado. El personal entra desde el navegador con su usuario y su clave, y ahí registra los **potreros** —cada uno admite hasta 150 animales—, los **animales** de cada potrero con su nombre, peso y edad, las **vacunas** que se les aplican y las **ventas**. Toda la información queda guardada en archivos dentro del propio servidor de la finca: no hay base de datos ni servicios de terceros.
+
+**Lo que el programa aporta es que conoce las reglas de la finca y avisa solo.** Sabe que un animal pasa por tres etapas —ternero hasta los doce meses, después cebón y novillo—, que cada etapa tiene un peso mínimo saludable y un peso recomendado para vender, y cuántas vacunas de cada tipo admite un animal según la etapa en la que esté. Con eso le avisa al operario cuando un potrero va por la mitad, cuando se llena, cuando un animal está por debajo de su peso saludable, cuando alcanza el peso de venta, cuando termina su plan de vacunación y cuando una vacuna se vence. El trimestre pasado se le añadió además el seguimiento por chip de localización de cada animal.
+
 **Qué le vamos a hacer al sistema.** Hoy la finca solo sabe vender el animal completo. Vamos a permitir
 que **venda también productos derivados** —leche, carne, piel— **sin dar de baja al animal**, y a dejar
 el sistema preparado para agregar **nuevos tipos de vacuna, avisos y reglas de control** de forma rápida.
@@ -383,10 +387,11 @@ Observer y Composite. La robustez no se improvisó: se construyó sobre una base
 ### Checklist de reglas que anulan criterios *(revisar antes de convertir a PDF)*
 - [ ] Bitácora: 15 registros escritos; **falta adjuntar una captura por integrante** (si falta → criterio 2 = 0.0).
 - [ ] Vista de negocio sin patrones/clases/UML/SOLID (si no → criterio 6 ≤ 3.0).
-- [ ] Diagramas corresponden al código. **Verificado:** el To‑Be dibuja `ValidadorCompuesto<T>` y las 4 hojas de
-  `ReglasRes/`, y `ValidadorRes` solo aparece en As‑Is. **Pendiente:** la realización
-  `PublisherPesoMin → IPublicadorEvento` está en la capa As‑Is, donde esa interfaz no existe, así que el To‑Be
-  enseña 4 de los 5 publicadores; y solo `ValidadorCompuesto<T>` lleva marcado su patrón y papel.
+- [x] **Diagramas corresponden al código — verificado clase por clase y relación por relación.**
+  To‑Be contra el código de este reto y As‑Is contra el del Reto 1: ninguna clase dibujada que no exista,
+  ninguna herencia o implementación del código sin dibujar, ninguna dibujada que el código no tenga, y los
+  377 miembros dibujados existen en el archivo de su clase. Cero aristas ancladas a la capa contraria.
+- [ ] Marcar en el To‑Be el patrón y el papel de cada clase: hoy solo lo lleva `ValidadorCompuesto<T>`.
 - [ ] Cada patrón anclado a un P‑xx (los 4 lo están).
 - [ ] Comportamiento observable sin cambios (verificado: 32/32 pruebas y caracterización coincidente — §9).
 - [ ] Sin cambio de estilo arquitectónico ni frameworks nuevos.
