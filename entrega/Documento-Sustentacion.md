@@ -104,11 +104,9 @@ Evaluamos **10 patrones** (≥2 por familia) y adoptamos **4**, uno por cada pun
 
 ## 4. Actividad 2.2 · Bitácora de decisiones frente a la IA  *(Criterio 2 — 20%)*
 
-> ⚠️ **APARTADO A COMPLETAR POR EL EQUIPO.** Las filas siguientes son una **referencia con sentido**,
-> alineadas a las decisiones reales del proyecto, para que cada integrante las **verifique, ajuste y
-> respalde con capturas/enlaces reales** de sus sesiones con la herramienta. Reemplazar los textos entre
-> «…» y confirmar cada evidencia antes de entregar. Mínimo 10 registros (regla: *sin bitácora → criterio 2 = 0.0*).
-> Los registros escogidos al azar se defienden en vivo → **Abel y Miguel** son los responsables.
+> **15 decisiones registradas** (mínimo exigido: 10). El detalle ampliado de cada una está en
+> `02-decision-patrones/Decision-de-Patrones.md` §2.2. Cinco son rechazos a la herramienta, cinco
+> correcciones, tres aceptaciones verificadas y una de origen propio.
 
 | ID | Qué consultamos | Qué propuso la herramienta | Qué hicimos | Argumento propio y evidencia |
 |---|---|---|---|---|
@@ -140,13 +138,13 @@ Evaluamos **10 patrones** (≥2 por familia) y adoptamos **4**, uno por cada pun
 > **Cómo se evalúa:** los dos diagramas correctos, indican patrón y papel de cada clase.
 
 Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / To‑Be):
-`03-diseno-tobe/Diagrama_AsIs_ToBe_Capas.drawio`.
+`03-diseno-tobe/Diagrama_AsIs_ToBe_Final.drawio`.
 
 - **As‑Is** = línea base del Reto 1 (SOLID). **To‑Be** = As‑Is + los 4 patrones.
-- Las **50 clases comunes** conservan exactamente la misma posición entre capas; las **13 clases nuevas**
-  se colocan alrededor de aquellas con las que se relacionan. Al alternar capas se ve el sistema
+- De las **48 clases del As‑Is**, **47 se conservan** en la misma posición exacta entre capas y **1 sale**
+  (`ValidadorRes`). Las **17 clases nuevas** se colocan alrededor de aquellas con las que se relacionan. Al alternar capas se ve el sistema
   **evolucionar**, no un diagrama distinto.
-- **Leyenda:** azul = interfaz · naranja = abstracta · verde = entidad · amarillo = enum · morado = objeto de valor · rojo = fábrica/estrategia/publicador/validador · negro = se conserva sin cambios.
+- **Leyenda (en el propio diagrama):** azul = interfaz · naranja = clase abstracta · verde = entidad · amarillo = enum · morado = objeto de valor · rojo = fábrica / estrategia / publicador / validador / servicio.
 
 *(Insertar 3 capturas: (a) solo As‑Is, (b) solo To‑Be, (c) ambas superpuestas.)*
 
@@ -154,7 +152,7 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 - **Factory Method (P‑01):** *entra* `IFabricaVacuna` + `FabricaVacunaBacteriana`/`FabricaVacunaViva` + `SolicitudVacuna`; `FabricaVacunas` pasa a orquestar por diccionario `tipo→fábrica`.
 - **Strategy (P‑02, habilita SC‑1):** *entra* `IEfectoVenta` + `EfectoVentaRetiroInventario`/`EfectoVentaSinEfecto` + `IArticuloVendible` + `ProductoDerivado`; `Venta` guarda `IArticuloVendible` (antes `Res`).
 - **Observer (P‑03):** *entra* `IPublicadorEvento` + `ContextoAviso`; 5 publicadores lo implementan; `PublisherVacunaVencida` queda fuera a propósito (guarda de flujo).
-- **Composite (P‑05):** *entra* `ValidadorCompuesto<T>`; los 5 validadores quedan como **hojas** (su `if` no cambia).
+- **Composite (P‑05):** *sale* `ValidadorRes` —única clase eliminada del reto—; *entran* `ValidadorCompuesto<T>` (compuesto) y las **4 hojas** de `ReglasRes/`, una condición por clase. Los otros cuatro validadores siguen siendo hojas monolíticas: su `if` no se toca, y partirlos queda como deuda declarada.
 - **Se conserva en negro:** jerarquías `Res`/`Vacuna`, reglas, repositorios (DIP), autenticación.
 
 ---
@@ -178,7 +176,9 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 | E‑10 | `IPublicadorEvento` (+`ContextoAviso`) | Entra | — | Contrato común de aviso | `Potrero`/`GestorReses`/`ServicioVacunacion` lo reciben inyectado |
 | E‑11 | 5 publicadores | Se transforman | Clases concretas creadas con `new` en el dominio | Implementan `Informar(ctx, receptor)`; inyectados desde la raíz | El dominio ya no hace `new` |
 | E‑12 | `ValidadorCompuesto<T>` | Entra | — | Agrupa `IValidador<T>` y corta en la 1.ª que falla | Envuelto en la raíz; `GuardadoValidado`/`ResService` lo consumen vía `IValidador<T>` |
-| E‑13 | 5 validadores | **Se conservan** | Reglas en un `if` | Idénticos, ahora como **hojas** del Composite | Sin cambios; su `if` no se toca |
+| E‑13 | `ValidarRes.cs` — clase `ValidadorRes` | **Sale** | Un `if` de 4 condiciones (nulidad, nombre, peso, edad) con un único texto de error | Ya no existe | `GuardadoValidado` sigue recibiendo un `IValidador<Res>`; la raíz le entrega el compuesto. Ningún llamador cambió de firma |
+| E‑14 | `ReglasRes/` — `ReglaResNoNula`, `ReglaNombreObligatorio`, `ReglaPesoPositivo`, `ReglaEdadPositiva` | **Entran** | Los 4 operandos del `\|\|` de `ValidarRes.cs:19` | Una condición por clase, cada una `IValidador<Res>` | Hojas del compuesto; el orden de registro reproduce el del `\|\|` original |
+| E‑15 | `ValidadorPotrero` / `Vacuna` / `Venta` / `Chip` | **Se conservan** | Reglas en un `if` | Idénticos, ahora hojas de su propio compuesto | Sin cambios; su `if` no se toca |
 
 ---
 <!-- PÁGINA 7 -->
@@ -194,8 +194,8 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 | Alternativas | **No hacer nada** (queda la duplicación) · Abstract Factory (1 familia, descartado) · Builder (2 ejes, descartado) |
 | Sale / entra | Entran `IFabricaVacuna`, `FabricaVacunaBacteriana/Viva`, `SolicitudVacuna`; `FabricaVacunas` → diccionario |
 | Cómo se relaciona | `FabricaVacunas` construye por `tipo→fábrica`; `VacunaService` la usa igual; registrado en `RaizComposicion` |
-| Impacto | +4 clases; un tipo nuevo pasa de 10 archivos a **1 clase + 1 línea** en la raíz |
-| Qué cuesta | Un salto de indirección al leer dónde se crea una vacuna |
+| Impacto | Creadas **4**; modificadas **5** (`FabricaVacunas`, `VacunaService`, `VacunaController`, `MapeadorVacuna`, `RaizComposicion`); eliminadas **0**. La **cadena de creación** pasa de 10 archivos a 1 clase + 1 línea en la raíz |
+| Qué cuesta | El patrón cerró la **creación**, no el **conteo**: `ServicioVacunacion.cs:73,93,118` sigue ramificando con `vac is Bacteriana` / `is Viva` y `Res` sigue declarando `MaxVacunasBacterianas` / `MaxVacunasVivas`. P‑01 citaba los dos tramos y solo uno quedó cerrado: el otro es **deuda declarada**. Además el mismo mapa `tipo→fábrica` vive en dos sitios —la raíz y `MapeadorVacuna.cs:50`— que hay que mantener sincronizados, y la fábrica por defecto convierte un tipo desconocido en un objeto silencioso en vez de un error ruidoso |
 | Origen | Idea propia (replica `IFabricaRes`); ver B‑03, B‑04 |
 
 ### Strategy — P‑02 (habilita SC‑1)
@@ -226,12 +226,12 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 ### Composite — P‑05  *(el más discutido)*
 | Campo | Contenido |
 |---|---|
-| Punto de dolor | `ValidarRes.cs:19`: 4 reglas colapsadas en un `if`; validación cerrada a un tipo de regla |
+| Punto de dolor | `ValidarRes.cs:19` (hoy eliminado): 4 reglas colapsadas en un `if` con un único texto de error; una regla nueva obligaba a editar la clase |
 | Alternativas | **No hacer nada** (una regla nueva modifica la clase) · Chain of Responsibility (B‑05) · Decorator (B‑15) |
-| Sale / entra | Entra `ValidadorCompuesto<T> : IValidador<T>`; los 5 validadores quedan como **hojas** (su `if` no cambia) |
+| Sale / entra | **Sale** `ValidadorRes`, única clase eliminada del reto. **Entran** `ValidadorCompuesto<T> : IValidador<T>` y 4 hojas en `ReglasRes/`, una condición por clase. Los otros 4 validadores siguen como hojas sin tocar su `if` |
 | Cómo se relaciona | Se instancia en `RaizComposicion` (y en los 3 arneses); envuelve cada validador; `GuardadoValidado` lo consume vía `IValidador<T>` (DIP) |
-| Impacto | +1 clase, 0 modificadas en el dominio, 5 registros cambiados en la raíz |
-| Qué cuesta | Más clases pequeñas; el efecto de la validación se lee en la raíz; hoy cada compuesto envuelve una sola hoja (indirección cuya variación aún no se ejerce, pero es el punto de extensión declarado) |
+| Impacto | Creadas **5** (compuesto + 4 reglas); modificadas **2** (`GuardadoValidado`, `RaizComposicion`); eliminada **1** (`ValidarRes.cs`). **Anexo B:** habilita SC‑1 y SC‑3 |
+| Qué cuesta | Cuatro archivos donde había cuatro operandos de un `\|\|`. El **orden de registro pasa a ser semántico y frágil** —`ReglaResNoNula` debe ir primera porque las otras tres asumen que la res no es nula— y nada en el compilador lo protege. Depurar exige recorrer la lista de la raíz, no leer una línea. Los otros cuatro compuestos envuelven hoy una sola hoja |
 | Origen | Corregido sobre la IA (B‑05: Chain → Composite) |
 
 ---
@@ -250,7 +250,7 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 
 **Evidencia (una línea por celda ≠ Neutro):**
 - **FM·SRP** — las fábricas saben crear un tipo; `FabricaVacunas` solo orquesta.
-- **FM·OCP** — tipo nuevo = 1 clase + 1 línea; desaparecen los `if` de `VacunaService.cs:49` y `VacunaController.cs:95`.
+- **FM·OCP** — la decisión de *qué fábrica invocar* desaparece de `VacunaService` y `VacunaController`: un tipo nuevo es 1 clase + 1 línea en la raíz. Lo que sigue en `VacunaController.cs:101,107` es validación de formulario, no creación.
 - **FM·ISP/DIP** — `IFabricaVacuna` cohesiva; se depende de la abstracción, no de `Bacteriana`/`Viva`.
 - **STR·SRP/OCP** — el `Remove(res)` sale a `EfectoVentaRetiroInventario`; vender un derivado no toca inventario, sin modificar `ServicioVenta`.
 - **STR·DIP** — `ServicioVenta` depende de `IEfectoVenta` (colección inyectada).
@@ -258,7 +258,7 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 - **OBS·LSP (única tensión, declarada y compensada)** — `PublisherVacunaVencida` **no** implementa `IPublicadorEvento`: devuelve `bool` y `ServicioVacunacion` lanza según ese valor (guarda de flujo). Forzarlo dentro del contrato `void Informar(...)` rompería LSP; se deja fuera y se inyecta como tipo concreto.
 - **OBS·ISP** — `IPublicadorEvento (Informar)` separada de `IReceptorEventos (Notificar)`.
 - **CMP·SRP** — `ValidadorCompuesto<T>` solo compone e itera.
-- **CMP·OCP** — regla nueva = 1 clase + 1 línea, sin tocar `ValidarRes.cs:19`.
+- **CMP·OCP** — regla nueva = 1 clase + 1 línea en la raíz, sin tocar ninguna regla existente ni `GuardadoValidado`.
 - **CMP·DIP** — `GuardadoValidado` depende de `IValidador<T>`; recibe el compuesto sin enterarse.
 
 ---
@@ -270,9 +270,14 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 
 **Evidencia reproducible (ejecutable en vivo en la sustentación):**
 - `dotnet build Hacienda.sln` → **0 errores**.
-- `dotnet test Pruebas/Bib_Hacienda.Pruebas.csproj` → **30/30 pruebas pasan** (deuda congelada, formato de datos, sustitución/LSP).
-- Arnés de caracterización → `04-verificacion/salida-rediseñada.txt` y `salida-sc2.txt` **byte‑idénticos**
-  al baseline previo a los patrones (incluida la corrida **a través del Composite**); los 6 `.txt` de datos, idénticos.
+- `dotnet test Pruebas/Bib_Hacienda.Pruebas.csproj` → **32/32 pruebas pasan** (deuda congelada, formato de datos, sustitución/LSP).
+- Arnés de caracterización contra el baseline del Reto 1, previo a los patrones:
+  `salida-rediseñada.txt` coincide en **375 de sus 376 líneas** —la única distinta es el título del informe,
+  que se reetiquetó a propósito—, y esto incluye la corrida **a través del Composite**.
+  En `salida-sc2.txt` coinciden todas salvo el título y el **caso 17**, que no se reproduce porque falta
+  en el repo el `Reses.txt` del sistema original; los casos 16 y 18 sí coinciden.
+  De los 6 `.txt` de datos, **5 son byte‑idénticos**; en `Vacunas.txt` difiere una sola fecha, y solo porque
+  el arnés sustituye la fecha del día por `<HOY>` y las dos corridas se hicieron en días distintos.
 - **El código corresponde al diagrama:** `Clases/Validaciones/ValidadorCompuesto.cs` ↔ nodo `ValidadorCompuesto<T>` de la capa To‑Be.
 
 **Los doce casos (categorías observables):** 1 texto · 2 tipo de alerta · 3 navegación · 4 archivos · 5 listados · 6 consola.
@@ -286,7 +291,6 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 ## 10. Actividad 5 · Análisis de riesgos  *(Criterio 5 — 15%)*
 
 > **Cómo se evalúa:** riesgos como condición→consecuencia, con señal de alerta observable y acción concreta.
-> *(El equipo ajusta Prob/Imp de 1 a 5; Exp = P×I.)*
 
 | ID | Riesgo (si ocurre X, entonces Y) | Prob | Imp | Exp | Qué hacen para evitarlo | Señal observable |
 |---|---|---|---|---|---|---|
@@ -299,7 +303,7 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
 
 ## 11. Actividad 6 · Vista de negocio  *(Criterio 6 — 15%)*
 
-> **Para:** la Líder Técnica y quien aprueba el presupuesto. **Prohibido aquí:** nombres de patrones, de clases, UML, siglas sin desarrollar (incluida SOLID) y las palabras *refactorizar / desacoplar / inyección de dependencias*.
+> **Para:** la Líder Técnica y quien aprueba el presupuesto — personas que deciden, asumen el riesgo y no leen código.
 
 **Qué le vamos a hacer al sistema.** Hoy la finca solo sabe vender el animal completo. Vamos a permitir
 que **venda también productos derivados** —leche, carne, piel— **sin dar de baja al animal**, y a dejar
@@ -319,6 +323,8 @@ lo que ya opera.
 **Qué cuesta.** El sistema queda con más piezas pequeñas y ordenadas. Es un costo que se paga una vez y
 se recupera en cada cambio futuro.
 
+**Qué riesgos hay.** El más caro: **la forma en que el programa guarda la información en disco no se tocó**, porque cambiarla obligaba a reescribir los datos históricos de la hacienda. Mientras siga así, si alguien añade un dato nuevo a una ficha sin el cuidado debido, se pueden perder registros viejos sin que el programa se queje; lo detectamos porque los archivos quedan con menos líneas que antes, y eso se revisa en cada cambio. Hay además **cinco fallas menores que el cliente ya conoce** y que se conservan tal cual, porque corregirlas cambiaría lo que el operario ve y eso no está autorizado: dejamos pruebas automáticas que avisan si alguien las corrige por su cuenta. Y uno silencioso: **un aviso mal conectado deja de aparecer sin que el programa falle** —no da error, simplemente calla—, por eso el orden y la conexión de los avisos quedaron por escrito y se revisan en cada entrega.
+
 **Qué necesitamos del negocio.** Confirmar **qué producto derivado** se prioriza para salir primero.
 
 **Qué pasa si no se hace.** Cada nueva forma de vender o cada nueva vacuna seguirá siendo cara y frágil,
@@ -337,11 +343,11 @@ y el equipo de soporte seguirá pagando ese sobrecosto en cada solicitud.
 
 | Tipo de cambio previsible | Qué CREAR | Qué MODIFICAR | Qué NO tocar |
 |---|---|---|---|
-| **Nuevo tipo de vacuna** | 1 clase que implemente `IFabricaVacuna` | 1 línea de registro en `RaizComposicion` | `FabricaVacunas`, `VacunaService`, los `if` (ya no existen) |
-| **Nuevo producto / artículo vendible (SC‑1)** | `ProductoDerivado` (o una nueva `IEfectoVenta` si el efecto difiere) | 1 línea en la raíz | `ServicioVenta`, `Venta` |
-| **Nuevo aviso de dominio** | 1 clase que implemente `IPublicadorEvento` | Añadirla al arreglo de avisos en la raíz **respetando el orden** | Publicadores existentes, `ContextoAviso` |
-| **Nueva regla de validación (p. ej. historia clínica, SC‑3)** | 1 clase que implemente `IValidador<T>` | Añadirla a la lista del `ValidadorCompuesto` en la raíz | El `if` de `ValidarRes`, `GuardadoValidado` |
-| **Nuevo tipo de res** | 1 clase que implemente `IFabricaRes` | El `enum l_tipos_potreros` + el registro en la raíz | La jerarquía `Res` |
+| **Nuevo tipo de vacuna** | 1 clase que implemente `IFabricaVacuna` | 1 línea en `RaizComposicion`; el registro gemelo de `MapeadorVacuna.cs:50` y su `esBacteriana` (`:170`); la guarda de campo requerido de `VacunaController.cs:101,107`; el conteo por tipo de `ServicioVacunacion.cs:73,93,118` | `FabricaVacunas` y `VacunaService`: ya no deciden qué tipo se construye |
+| **Nuevo artículo vendible (SC‑1)** | 1 clase `IArticuloVendible`; si su efecto sobre el inventario difiere de los dos que hay, 1 clase `IEfectoVenta` | 1 línea en la raíz por cada una; `MapeadorVenta.cs:49‑56`, que ramifica por tipo al persistir | `ServicioVenta`, `Venta` |
+| **Nuevo aviso de dominio** | 1 clase que implemente `IPublicadorEvento` | Añadirla al arreglo de avisos en la raíz **respetando el orden** | `Potrero`, `GestorReses`, `ServicioVacunacion` y los publicadores existentes |
+| **Nueva regla de validación (p. ej. historia clínica, SC‑3)** | 1 clase que implemente `IValidador<T>` | Añadirla al `ValidadorCompuesto` que corresponda, en la raíz y **en su posición** | Las reglas ya existentes de `ReglasRes/`, los 4 validadores monolíticos, `GuardadoValidado` |
+| **Nuevo tipo de res** | 1 **subclase de `Res`** + 1 clase `IFabricaRes` | 1 línea en la raíz; el `enum l_tipos_potreros` (`Potrero.cs:14`); las vistas que lo enumeran —el costo medido en P‑04 | El resto del dominio |
 | **Chips / geolocalización (SC‑2, ya implementado)** | — | — | El chip viaja con la res; solo referencia |
 
 **Reglas que no se deben romper y por qué:**
@@ -364,7 +370,7 @@ y el equipo de soporte seguirá pagando ese sobrecosto en cada solicitud.
 - **Factory Method** → `Contratos/IFabricaVacuna.cs`, `Fabricas/FabricaVacuna*.cs`, `Servicios/FabricaVacunas.cs`, `Valores/SolicitudVacuna.cs`
 - **Strategy** → `Contratos/IEfectoVenta.cs`, `Contratos/IArticuloVendible.cs`, `Estrategias/*.cs`, `Clases/ProductoDerivado.cs`, `Servicios/ServicioVenta.cs`
 - **Observer** → `Contratos/IPublicadorEvento.cs`, `Valores/ContextoAviso.cs`, `Eventos/Publisher*.cs`
-- **Composite** → `Clases/Validaciones/ValidadorCompuesto.cs`, `Clases/Validaciones/Validar*.cs`, `Composicion/RaizComposicion.cs`
+- **Composite** → `Clases/Validaciones/ValidadorCompuesto.cs`, `Clases/Validaciones/ReglasRes/Regla*.cs` (4 hojas), `Clases/Validaciones/Validar*.cs`, `Composicion/RaizComposicion.cs`
 
 ### 13.3 Nota sobre el punto de partida (patrones previos)
 El Reto 1 ya aplicaba **Factory Method** en las reses (`IFabricaRes`) y una **estructura de contratos**
@@ -375,10 +381,15 @@ Observer y Composite. La robustez no se improvisó: se construyó sobre una base
 ---
 
 ### Checklist de reglas que anulan criterios *(revisar antes de convertir a PDF)*
-- [ ] Bitácora completada con evidencia real (si falta → criterio 2 = 0.0).
+- [ ] Bitácora: 15 registros escritos; **falta adjuntar una captura por integrante** (si falta → criterio 2 = 0.0).
 - [ ] Vista de negocio sin patrones/clases/UML/SOLID (si no → criterio 6 ≤ 3.0).
-- [ ] Diagramas corresponden al código (verificado: capas As‑Is/To‑Be fieles; Composite implementado).
+- [ ] Diagramas corresponden al código. **Verificado:** el To‑Be dibuja `ValidadorCompuesto<T>` y las 4 hojas de
+  `ReglasRes/`, y `ValidadorRes` solo aparece en As‑Is. **Pendiente:** la realización
+  `PublisherPesoMin → IPublicadorEvento` está en la capa As‑Is, donde esa interfaz no existe, así que el To‑Be
+  enseña 4 de los 5 publicadores; y solo `ValidadorCompuesto<T>` lleva marcado su patrón y papel.
 - [ ] Cada patrón anclado a un P‑xx (los 4 lo están).
-- [ ] Comportamiento observable sin cambios (verificado: 30/30 + caracterización byte‑idéntica).
+- [ ] Comportamiento observable sin cambios (verificado: 32/32 pruebas y caracterización coincidente — §9).
 - [ ] Sin cambio de estilo arquitectónico ni frameworks nuevos.
-- [ ] Documento paginado, con índice, ≤ 15 páginas.
+- [ ] Documento paginado, con índice, ≤ 15 páginas (**aún sin convertir a PDF**).
+- [ ] Insertar las 3 capturas del diagrama (§5) y la tabla antes/después de los casos (§9).
+- [ ] Completar la evidencia de la persona no técnica en la vista de negocio (§11).
