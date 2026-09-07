@@ -12,10 +12,10 @@ correcto (SOLID, Reto 1) al diseño robusto (SOLID + patrones, Reto 2).
 
 | Rol | Integrante | Responde por |
 |---|---|---|
-| Arquitecto Líder | *(por confirmar)* | Puntos rígidos, selección y descarte de patrones, diseño TO-BE |
+| Arquitecto Líder | *Juan Esteban Vasco* | Puntos rígidos, selección y descarte de patrones, diseño TO-BE |
 | Arquitecto de Verificación | *Juan José Mesa Cardona* | Que SOLID siga en pie y que el comportamiento no cambió |
-| Arquitecto de Riesgos y despliegue | *(por confirmar)* | Análisis de riesgo y plan de cambio |
-| Arquitecto de comunicación gráfica | *(por confirmar)* | Las dos vistas, la bitácora de decisiones, el documento |
+| Arquitecto de Riesgos y despliegue | *Miguel Moreno* | Análisis de riesgo y plan de cambio |
+| Arquitecto de comunicación gráfica | *Abel Garcia* | Las dos vistas, la bitácora de decisiones, el documento |
 
 ---
 
