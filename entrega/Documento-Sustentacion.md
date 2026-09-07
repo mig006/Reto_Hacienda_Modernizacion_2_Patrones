@@ -145,6 +145,12 @@ Entregamos **un solo archivo `.drawio` con dos capas superpuestas** (As‑Is / T
   (`ValidadorRes`). Las **17 clases nuevas** se colocan alrededor de aquellas con las que se relacionan. Al alternar capas se ve el sistema
   **evolucionar**, no un diagrama distinto.
 - **Leyenda (en el propio diagrama):** azul = interfaz · naranja = clase abstracta · verde = entidad · amarillo = enum · morado = objeto de valor · rojo = fábrica / estrategia / publicador / validador / servicio.
+- **Patrón y papel, clase por clase.** En el To‑Be, cada clase que participa en un patrón lleva encima su marca —
+  `«Factory Method (P‑01) · creador concreto»`, `«Observer (P‑03) · sujeto»`, `«Composite (P‑05) · hoja»`…—, con un
+  color por patrón. Van marcadas **44 clases**; las 20 sin marca no participan en ninguno de los cuatro, y la leyenda
+  lo dice. Dos casos se marcan a propósito: el Factory Method que ya venía del Reto 1 (`IFabricaRes`) se rotula
+  `«(Reto 1)»` para no confundirlo con los adoptados, y `PublisherVacunaVencida` se rotula `«FUERA del Observer»`,
+  que es la tensión LSP que declara la matriz.
 
 *(Insertar 3 capturas: (a) solo As‑Is, (b) solo To‑Be, (c) ambas superpuestas.)*
 
@@ -391,7 +397,7 @@ Observer y Composite. La robustez no se improvisó: se construyó sobre una base
   To‑Be contra el código de este reto y As‑Is contra el del Reto 1: ninguna clase dibujada que no exista,
   ninguna herencia o implementación del código sin dibujar, ninguna dibujada que el código no tenga, y los
   377 miembros dibujados existen en el archivo de su clase. Cero aristas ancladas a la capa contraria.
-- [ ] Marcar en el To‑Be el patrón y el papel de cada clase: hoy solo lo lleva `ValidadorCompuesto<T>`.
+- [x] **Patrón y papel marcados en el To‑Be:** 44 clases rotuladas, 20 sin marca por no participar en ningún patrón adoptado (la leyenda lo declara).
 - [ ] Cada patrón anclado a un P‑xx (los 4 lo están).
 - [ ] Comportamiento observable sin cambios (verificado: 32/32 pruebas y caracterización coincidente — §9).
 - [ ] Sin cambio de estilo arquitectónico ni frameworks nuevos.
